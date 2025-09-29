@@ -1,0 +1,31 @@
+Instructions to fix missing assets (audio/images)
+
+Why you see 404s:
+- The game's JS expects background music and SFX in the folder `sounds/` with these filenames:
+  - sounds/bg-music.ogg   (background loop)
+  - sounds/attack.ogg     (attack SFX)
+  - sounds/defend.wav     (defend SFX)
+  - sounds/win.wav        (win SFX)
+  - sounds/lose.wav       (lose SFX)
+
+- The earlier code also expected art under `assets/familiars/`, `assets/enemies/`, and `assets/items/`.
+  Your repository currently contains images in the `img/` folder instead. To avoid 404s you have two options:
+
+Option A - Put files where the code expects them (recommended for future portability):
+- Create a `sounds/` folder at the project root and add your audio files with the exact filenames above.
+- Create `assets/familiars/`, `assets/enemies/`, and `assets/items/` and place your images there using the names referenced in the code (e.g., `griffin.jpg`, `dragon.png`, `health_potion.png`).
+- Rename any files with spaces (like `red claws.png`) to use hyphens: `red-claws.png` and update code if you prefer the space.
+
+Option B - Keep your current `img/` folder and let the app use those images (already applied):
+- I updated the code to use many `img/` images as fallbacks (so the UI should now render without those 404s).
+- You still need to add sound files to `sounds/` or update the filenames in `index.html` and `js/battle.js` to match your audio files.
+
+How I can help next:
+- If you want, I can update the code to reference different sound filenames you already have. Tell me the exact filenames and I will patch `index.html` and `js/battle.js`.
+- Or, give me permission to rename `img/red claws.png` to `img/red-claws.png` and update the code accordingly.
+
+Quick checklist you can follow now:
+- Create folder `c:\Users\DeanSmith\Desktop\pet-test\sounds\` and add bg-music.ogg, attack.ogg, defend.wav, win.wav, lose.wav.
+- Optionally move images from `img/` into `assets/familiars/` and `assets/enemies/`.
+
+If you drop the first missing file (bg-music.ogg) into `sounds/` and then reload the page, paste any remaining console error(s) here and I'll fix them directly.
