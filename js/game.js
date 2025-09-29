@@ -1,12 +1,32 @@
 // game.js
-// File-based audio player for sound effects (this is the playSound used for .ogg/.wav files)
+// playSound: small wrapper that uses the WebAudio tone helper for common SFX
 function playSound(soundFile) {
   try {
+    if (typeof soundFile === 'string') {
+      // For built-in SFX avoid network requests (prevents 404s when sounds/ is missing)
+      if (soundFile.includes('attack')) {
+        playTone(880, 0.06, 'sawtooth');
+        return;
+      }
+      if (soundFile.includes('defend')) {
+        playTone(440, 0.09, 'sine');
+        return;
+      }
+      if (soundFile.includes('win')) {
+        // two-tone victory
+        playTone(880, 0.12, 'triangle');
+        setTimeout(() => playTone(1100, 0.09, 'triangle'), 120);
+        return;
+      }
+      if (soundFile.includes('lose')) {
+        playTone(220, 0.25, 'sine');
+        return;
+      }
+    }
+
+    // Fallback: try to load the provided file (will fail silently if missing)
     const audio = new Audio(soundFile);
-    audio.play().catch(error => {
-      // Autoplay was prevented.
-      // console.log("Playback prevented for " + soundFile);
-    });
+    audio.play().catch(() => {});
   } catch (e) {
     console.warn('Audio play failed', e);
   }

@@ -213,6 +213,8 @@ function endBattle(result) {
 
   setTimeout(() => {
     showSection('familiars');
+    // refresh UI and re-show actions
+    try { renderAllSections(); updateUI(); } catch (e) {}
     if (battleActionsEl) battleActionsEl.style.display = 'flex';
   }, 1400);
 }

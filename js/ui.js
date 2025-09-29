@@ -203,6 +203,46 @@ function showSlash(targetEl, imagePath = 'img/red claws.png') {
   setTimeout(() => img.remove(), 420);
 }
 
+/* ---------- Celebration effect (used by game/battle on wins, purchases) ---------- */
+function celebrate() {
+  try {
+    // spawn a few orbs toward the coin counter
+    spawnOrb(coinCountEl, 6);
+
+    // simple confetti animation (no external CSS required)
+    const colors = ['#e74c3c','#f1c40f','#2ecc71','#3498db','#9b59b6'];
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.style.position = 'fixed';
+      el.style.zIndex = 9999;
+      el.style.left = (Math.random() * 100) + '%';
+      el.style.top = '-10px';
+      el.style.width = '10px';
+      el.style.height = '10px';
+      el.style.background = colors[i % colors.length];
+      el.style.opacity = '0.95';
+      el.style.borderRadius = '2px';
+      el.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+      el.style.pointerEvents = 'none';
+      document.body.appendChild(el);
+
+      // animate downwards
+      setTimeout(() => {
+        el.style.transition = 'all 1800ms linear';
+        el.style.top = (60 + Math.random() * 30) + '%';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(120px) rotate(' + (Math.random() * 720) + 'deg)';
+      }, 20 + Math.random() * 240);
+
+      setTimeout(() => el.remove(), 2000 + Math.random() * 500);
+    }
+
+    // Try to play a win sound, if available
+    try { if (typeof playSound === 'function') playSound('sounds/win.wav'); } catch (e) {}
+  } catch (e) { console.warn('celebrate() error', e); }
+}
+
 /* ---------- Small tone helper (keeps oscillator separate from file SFX) ---------- */
 let _audioCtx = null;
 function playTone(freq = 440, dur = 0.08, type = 'sine') {
@@ -221,4 +261,4 @@ function playTone(freq = 440, dur = 0.08, type = 'sine') {
     setTimeout(() => { try { o.stop(); } catch(e){} }, dur*1000 + 80);
   } catch(e) { console.warn('Audio ctx error', e); }
 }
-    container.appendChild(div);
+    
