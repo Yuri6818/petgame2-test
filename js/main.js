@@ -2,6 +2,7 @@
 // Initialize Game
 function init() {
   document.body.className = 'home'; // Set initial background
+  loadSounds();
   loadGame();
   updateUI();
   updateServerTime();
@@ -44,25 +45,9 @@ function loadGame() {
         }
       }
 
-      if (savedGameState.familiars) {
-        const migratedFamiliars = savedGameState.familiars.map(savedFamiliar => {
-          const initialFamiliarData = gameState.familiars.find(f => f.id === savedFamiliar.id) || {};
-          const migratedFamiliar = {
-            ...initialFamiliarData,
-            ...savedFamiliar
-          };
-          migratedFamiliar.hp = migratedFamiliar.hp || 50;
-          migratedFamiliar.attack = migratedFamiliar.attack || 10;
-          migratedFamiliar.defense = migratedFamiliar.defense || 5;
-          migratedFamiliar.speed = migratedFamiliar.speed || 10;
-          migratedFamiliar.hunger = (migratedFamiliar.hunger === null || migratedFamiliar.hunger === undefined) ? 100 : migratedFamiliar.hunger;
-          migratedFamiliar.thirst = (migratedFamiliar.thirst === null || migratedFamiliar.thirst === undefined) ? 100 : migratedFamiliar.thirst;
-          migratedFamiliar.happiness = migratedFamiliar.happiness || 100;
-          return migratedFamiliar;
-        });
-        savedGameState.familiars = migratedFamiliars;
-      }
-      
+      // Don't load familiars from save, to force using the ones from data.js
+      delete savedGameState.familiars;
+
       // Ensure activities keys exist
       const requiredActivities = ['foraging','mining','fishing','catching','enchanting'];
       if (!savedGameState.activities) savedGameState.activities = {};
@@ -105,6 +90,12 @@ function toggleMute() {
   bgMusic.muted = musicMuted;
   const btn = document.getElementById('mute-btn');
   if (btn) btn.textContent = musicMuted ? 'Unmute' : 'Mute';
+}
+
+function clearSave() {
+  localStorage.removeItem("familiarGameSave");
+  localStorage.removeItem("petGameSave");
+  location.reload();
 }
 
 // Try to resume audio context on user gesture (for WebAudio)

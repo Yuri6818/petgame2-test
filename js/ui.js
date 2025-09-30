@@ -94,10 +94,10 @@ function renderFamiliars() {
   (gameState.familiars || []).forEach(fam => {
     const key = (fam.species || fam.name || 'familiar').toString().toLowerCase().replace(/\s+/g, '-');
     const imgSrc = getImageSrc(fam, 'familiar');
-  const placeholder = (familiarImages && familiarImages.default) || 'img/pets.jpg';
+  const placeholder = (familiarImages && familiarImages.default) || 'img/familiars.jpg';
 
     const div = document.createElement('div');
-    div.className = 'card pet-card';
+    div.className = 'card familiar-card';
     div.dataset.familiarId = fam.id;
 
     // Stats layout: left = needs, right = core stats
@@ -122,14 +122,14 @@ function renderFamiliars() {
         </div>
       </div>
 
-      <div class="pet-actions">
+      <div class="familiar-actions">
         <button class="btn" onclick="interactFamiliar(${fam.id}, 'play')">Play</button>
         <button class="btn" onclick="interactFamiliar(${fam.id}, 'feed')">Feed</button>
         <button class="btn" onclick="interactFamiliar(${fam.id}, 'water')">Water</button>
         <button class="btn btn-primary" onclick="startBattle(${fam.id})">Battle</button>
       </div>
 
-      <div class="pet-actions">
+      <div class="familiar-actions">
         <button class="btn" onclick="renameFamiliar(${fam.id})">Rename</button>
       </div>
     `;
@@ -202,63 +202,3 @@ function showSlash(targetEl, imagePath = 'img/red claws.png') {
   targetEl.appendChild(img);
   setTimeout(() => img.remove(), 420);
 }
-
-/* ---------- Celebration effect (used by game/battle on wins, purchases) ---------- */
-function celebrate() {
-  try {
-    // spawn a few orbs toward the coin counter
-    spawnOrb(coinCountEl, 6);
-
-    // simple confetti animation (no external CSS required)
-    const colors = ['#e74c3c','#f1c40f','#2ecc71','#3498db','#9b59b6'];
-    for (let i = 0; i < 30; i++) {
-      const el = document.createElement('div');
-      el.className = 'confetti';
-      el.style.position = 'fixed';
-      el.style.zIndex = 9999;
-      el.style.left = (Math.random() * 100) + '%';
-      el.style.top = '-10px';
-      el.style.width = '10px';
-      el.style.height = '10px';
-      el.style.background = colors[i % colors.length];
-      el.style.opacity = '0.95';
-      el.style.borderRadius = '2px';
-      el.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
-      el.style.pointerEvents = 'none';
-      document.body.appendChild(el);
-
-      // animate downwards
-      setTimeout(() => {
-        el.style.transition = 'all 1800ms linear';
-        el.style.top = (60 + Math.random() * 30) + '%';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(120px) rotate(' + (Math.random() * 720) + 'deg)';
-      }, 20 + Math.random() * 240);
-
-      setTimeout(() => el.remove(), 2000 + Math.random() * 500);
-    }
-
-    // Try to play a win sound, if available
-    try { if (typeof playSound === 'function') playSound('sounds/win.wav'); } catch (e) {}
-  } catch (e) { console.warn('celebrate() error', e); }
-}
-
-/* ---------- Small tone helper (keeps oscillator separate from file SFX) ---------- */
-let _audioCtx = null;
-function playTone(freq = 440, dur = 0.08, type = 'sine') {
-  try {
-    if (!_audioCtx || _audioCtx.state === 'closed') _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const ctx = _audioCtx;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = type;
-    o.frequency.setValueAtTime(freq, ctx.currentTime);
-    o.connect(g); g.connect(ctx.destination);
-    g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.01);
-    o.start();
-    setTimeout(() => { try { g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur); } catch(e){} }, dur*1000);
-    setTimeout(() => { try { o.stop(); } catch(e){} }, dur*1000 + 80);
-  } catch(e) { console.warn('Audio ctx error', e); }
-}
-    

@@ -31,6 +31,7 @@
         <div class="status-item">🎯 Level: <span id="playerLevel">1</span></div>
         <div class="status-item">⭐ XP: <span id="playerXP">0</span>/100</div>
         <button id="mute-btn" class="nav-btn" onclick="toggleMute()">Mute</button>
+        <button id="clear-save-btn" class="nav-btn" onclick="clearSave()">Clear Save</button>
       </div>
     </div>
 
@@ -167,10 +168,11 @@
   </div>
 
   <!-- Background music (loop) -->
-  <audio id="bg-music" src="sounds/bg-music.ogg" loop preload="auto"></audio>
+  <audio id="bg-music" src="sounds/music.ogg" loop preload="auto"></audio>
 
   <script src="js/data.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/sound.js"></script>
   <script src="js/game.js"></script>
   <script src="js/battle.js"></script>
   <script src="js/main.js"></script>

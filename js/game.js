@@ -1,35 +1,44 @@
 // game.js
-// playSound: small wrapper that uses the WebAudio tone helper for common SFX
-function playSound(soundFile) {
+
+
+/* ---------- Celebration effect (used by game/battle on wins, purchases) ---------- */
+function celebrate() {
   try {
-    if (typeof soundFile === 'string') {
-      // For built-in SFX avoid network requests (prevents 404s when sounds/ is missing)
-      if (soundFile.includes('attack')) {
-        playTone(880, 0.06, 'sawtooth');
-        return;
-      }
-      if (soundFile.includes('defend')) {
-        playTone(440, 0.09, 'sine');
-        return;
-      }
-      if (soundFile.includes('win')) {
-        // two-tone victory
-        playTone(880, 0.12, 'triangle');
-        setTimeout(() => playTone(1100, 0.09, 'triangle'), 120);
-        return;
-      }
-      if (soundFile.includes('lose')) {
-        playTone(220, 0.25, 'sine');
-        return;
-      }
+    // spawn a few orbs toward the coin counter
+    spawnOrb(coinCountEl, 6);
+
+    // simple confetti animation (no external CSS required)
+    const colors = ['#e74c3c','#f1c40f','#2ecc71','#3498db','#9b59b6'];
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.style.position = 'fixed';
+      el.style.zIndex = 9999;
+      el.style.left = (Math.random() * 100) + '%';
+      el.style.top = '-10px';
+      el.style.width = '10px';
+      el.style.height = '10px';
+      el.style.background = colors[i % colors.length];
+      el.style.opacity = '0.95';
+      el.style.borderRadius = '2px';
+      el.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+      el.style.pointerEvents = 'none';
+      document.body.appendChild(el);
+
+      // animate downwards
+      setTimeout(() => {
+        el.style.transition = 'all 1800ms linear';
+        el.style.top = (60 + Math.random() * 30) + '%';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(120px) rotate(' + (Math.random() * 720) + 'deg)';
+      }, 20 + Math.random() * 240);
+
+      setTimeout(() => el.remove(), 2000 + Math.random() * 500);
     }
 
-    // Fallback: try to load the provided file (will fail silently if missing)
-    const audio = new Audio(soundFile);
-    audio.play().catch(() => {});
-  } catch (e) {
-    console.warn('Audio play failed', e);
-  }
+    // Try to play a win sound, if available
+    try { if (typeof playSound === 'function') playSound('sounds/win.wav'); } catch (e) {}
+  } catch (e) { console.warn('celebrate() error', e); }
 }
 
 console.log("game.js loaded");
@@ -293,7 +302,7 @@ function completeActivity(activityName) {
     if (Math.random() < 0.5) {
       const randomItem = {
         name: `Wildling ${gameState.familiars.length + 1}`,
-  image: enemyImages.default || 'img/pets.jpg',
+  image: enemyImages.default || 'img/familiars.jpg',
         hp: 40,
         attack: 8,
         defense: 4,
@@ -311,7 +320,7 @@ function completeActivity(activityName) {
     if (Math.random() < 0.5) {
       const randomItem = {
         name: `Sprite ${gameState.familiars.length + 1}`,
-  image: familiarImages.cat || 'img/pets.jpg',
+  image: familiarImages.cat || 'img/familiars.jpg',
         hp: 60,
         attack: 12,
         defense: 8,

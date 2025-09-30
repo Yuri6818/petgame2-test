@@ -48,7 +48,7 @@ function renderBattle() {
   if (playerFamiliarEl) {
     playerFamiliarEl.innerHTML = `
       <h3>${player.name || 'Unknown'}</h3>
-  <img src="${playerImg}" alt="${player.name || 'player'}" onerror="this.onerror=null;this.src='img/pets.jpg'">
+  <img src="${playerImg}" alt="${player.name || 'player'}" onerror="this.onerror=null;this.src='img/familiars.jpg'">
       <p>HP: ${playerCurrent} / ${playerHp}</p>
       <div class="health-bar"><div class="health-bar-fill" style="width: ${playerHealthPercent}%;"></div></div>
     `;
@@ -57,7 +57,7 @@ function renderBattle() {
   if (opponentFamiliarEl) {
     opponentFamiliarEl.innerHTML = `
       <h3>${opponent.name || 'Unknown'}</h3>
-  <img src="${opponentImg}" alt="${opponent.name || 'opponent'}" onerror="this.onerror=null;this.src='img/pets.jpg'">
+  <img src="${opponentImg}" alt="${opponent.name || 'opponent'}" onerror="this.onerror=null;this.src='img/familiars.jpg'">
       <p>HP: ${opponentCurrent} / ${opponentHp}</p>
       <div class="health-bar"><div class="health-bar-fill" style="width: ${opponentHealthPercent}%;"></div></div>
     `;

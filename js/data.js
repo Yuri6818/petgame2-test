@@ -13,7 +13,7 @@ let gameState = {
   lastDaily: null,
   familiars: [
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
-  { id: 1, name: "Grumblenook", species: "grumblenook", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/pets.jpg", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
+  { id: 1, name: "Grumblenook", species: "grumblenook", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/cute-deserrt-thing.jpg", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
   { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
   { id: 3, name: "Thistle", species: "hippogriff", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/griffin.jpg", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 }
   ],
@@ -47,8 +47,8 @@ const familiarImages = {
   dragon: 'img/dragon.png',
   griffin: 'img/griffin.jpg',
   hippogriff: 'img/griffin.jpg',
-  grumblenook: 'img/pets.jpg',
-  default: 'img/pets.jpg'
+  grumblenook: 'img/cute-deserrt-thing.jpg',
+  default: 'img/familiars.jpg'
 };
 
 const enemyImages = {
@@ -62,7 +62,7 @@ const enemyImages = {
   harpy: 'img/firedog.jpg',
   orc: 'img/orc.png',
   hydra: 'img/frog-mushroom-head.jpg',
-  default: 'img/pets.jpg'
+  default: 'img/familiars.jpg'
 };
 
 // Expose image maps globally
