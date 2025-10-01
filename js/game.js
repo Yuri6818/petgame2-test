@@ -302,7 +302,7 @@ function completeActivity(activityName) {
     if (Math.random() < 0.5) {
       const randomItem = {
         name: `Wildling ${gameState.familiars.length + 1}`,
-  image: enemyImages.default || 'img/familiars.jpg',
+  image: enemyImages.default || 'img/assets/battle.jpg',
         hp: 40,
         attack: 8,
         defense: 4,
@@ -320,7 +320,7 @@ function completeActivity(activityName) {
     if (Math.random() < 0.5) {
       const randomItem = {
         name: `Sprite ${gameState.familiars.length + 1}`,
-  image: familiarImages.cat || 'img/familiars.jpg',
+  image: familiarImages.cat || 'img/familiars/cat.png',
         hp: 60,
         attack: 12,
         defense: 8,

@@ -1,6 +1,45 @@
 // data.js
 // Central game state and static data
 
+// Centralized image paths
+const IMG_PATHS = {
+  inventory: "img/assets/inventory.jpg",
+  crystal: "img/assets/crystal.jpg",
+  sword: "img/assets/sword.jpg",
+  egg: "img/assets/egg.jpg",
+  star: "img/assets/star.jpg", // Fixed path to be in assets folder
+  healthPot: "img/assets/health pot.png",
+  shop: "img/assets/shop.jpg",
+  battle: "img/assets/battle.jpg",  // Used as enemy default
+  crate: "img/assets/crate.png",    // Used for mystery box
+  redClaws: "img/assets/red claws.png"  // Used for battle slash effect
+};
+
+// Image mappings for familiars and enemies - defined first since they're used in gameState
+const familiarImages = {
+  wolf: 'img/familiars/wolf.jpg',
+  cat: 'img/familiars/cat.png',
+  dragon: 'img/familiars/dragon.png',
+  griffin: 'img/familiars/griffin.jpg',
+  hippogriff: 'img/familiars/grumblenook.jpg',
+  grumblenook: 'img/familiars/cute-deserrt-thing.jpg',
+  default: 'img/familiars/familiars.png'
+};
+
+const enemyImages = {
+  goblin: 'img/enemies/goblin.png',
+  slime: 'img/enemies/slime.png',
+  golem: 'img/enemies/golem.png',
+  warg: 'img/enemies/batcat.jpg',
+  raven: 'img/enemies/black-cat.jpg',
+  boar: 'img/enemies/crystal-pig.jpg',
+  spider: 'img/enemies/spider.jpg',
+  harpy: 'img/enemies/firedog.jpg',
+  orc: 'img/enemies/orc.png',
+  hydra: 'img/enemies/frog-mushroom-head.jpg',
+  default: IMG_PATHS.battle
+};
+
 // Game State
 let gameState = {
   player: {
@@ -13,13 +52,13 @@ let gameState = {
   lastDaily: null,
   familiars: [
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
-  { id: 1, name: "Grumblenook", species: "grumblenook", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/cute-deserrt-thing.jpg", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
-  { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
-  { id: 3, name: "Thistle", species: "hippogriff", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/griffin.jpg", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 }
+  { id: 1, name: "Grumblenook", species: "grumblenook", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/cute-deserrt-thing.jpg", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
+  { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/familiars/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
+  { id: 3, name: "Thistle", species: "hippogriff", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/griffin.jpg", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 }
   ],
   inventory: [
-  { id: 101, name: "Health Potion", image: "img/inventory.jpg", quantity: 3, type: 'consumable', description: 'Restores familiar happiness and slightly heals.' },
-  { id: 102, name: "Magic Crystal", image: "img/inventory.jpg", quantity: 1, type: 'consumable', description: 'Grants bonus XP when used.' }
+  { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores familiar happiness and slightly heals.' },
+  { id: 102, name: "Magic Crystal", image: IMG_PATHS.crystal, quantity: 1, type: 'consumable', description: 'Grants bonus XP when used.' }
   ],
   activities: {
     foraging: { active: false, progress: 0 },
@@ -31,43 +70,21 @@ let gameState = {
 
 // Shop items: prefer `image` paths over emoji. Drop images into assets/shop
 const shopItems = [
-  { id: 201, name: "Health Potion", price: 20, currency: "coins", image: "img/inventory.jpg", description: "Restores 20 health to all familiars.", type: "consumable" },
-  { id: 202, name: "Magic Sword", price: 100, currency: "coins", image: "img/inventory.jpg", description: "Increases your familiar's attack by 10 for the next battle.", type: "consumable" },
-  { id: 203, name: "Rare Familiar Egg", price: 15, currency: "dust", image: "img/inventory.jpg", type: "egg", description: "A rare egg that can be hatched into a powerful familiar." },
-  { id: 204, name: "Experience Boost", price: 30, currency: "coins", image: "img/inventory.jpg", description: "Doubles the XP gained for the next 3 activities.", type: "consumable" },
-  { id: 205, name: "Mystery Box", price: 5, currency: "dust", image: "img/inventory.jpg", description: "Contains a random item from the shop." },
+  { id: 201, name: "Health Potion", price: 20, currency: "coins", image: IMG_PATHS.healthPot, description: "Restores 20 health to all familiars.", type: "consumable" },
+  { id: 202, name: "Magic Sword", price: 100, currency: "coins", image: IMG_PATHS.sword, description: "Increases your familiar's attack by 10 for the next battle.", type: "consumable" },
+  { id: 203, name: "Rare Familiar Egg", price: 15, currency: "dust", image: IMG_PATHS.egg, type: "egg", description: "A rare egg that can be hatched into a powerful familiar." },
+  { id: 204, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.star, description: "Doubles the XP gained for the next 3 activities.", type: "consumable" },
+  { id: 205, name: "Mystery Box", price: 5, currency: "dust", image: IMG_PATHS.crate, description: "Contains a random item from the shop." },
   // A familiar purchasable directly
-  { id: 301, type: "familiar", name: "Griffin", price: 50, currency: "dust", image: "img/griffin.jpg", hp: 110, attack: 22, defense: 12, speed: 18, description: "A majestic creature." }
+  { id: 301, type: "familiar", name: "Griffin", price: 50, currency: "dust", image: familiarImages.griffin, hp: 110, attack: 22, defense: 12, speed: 18, description: "A majestic creature." }
 ];
 
-// Image mappings (fallbacks) — you can drop images in these folders and update keys
-const familiarImages = {
-  wolf: 'img/wolf.jpg',
-  cat: 'img/cat.png',
-  dragon: 'img/dragon.png',
-  griffin: 'img/griffin.jpg',
-  hippogriff: 'img/griffin.jpg',
-  grumblenook: 'img/cute-deserrt-thing.jpg',
-  default: 'img/familiars.jpg'
-};
-
-const enemyImages = {
-  goblin: 'img/goblin.png',
-  slime: 'img/slime.png',
-  golem: 'img/golem.png',
-  warg: 'img/batcat.jpg',
-  raven: 'img/black-cat.jpg',
-  boar: 'img/crystal-pig.jpg',
-  spider: 'img/cute-deserrt-thing.jpg',
-  harpy: 'img/firedog.jpg',
-  orc: 'img/orc.png',
-  hydra: 'img/frog-mushroom-head.jpg',
-  default: 'img/familiars.jpg'
-};
-
 // Expose image maps globally
+// Expose all needed variables globally
 window.familiarImages = familiarImages;
 window.enemyImages = enemyImages;
+window.IMG_PATHS = IMG_PATHS;
+window.gameState = gameState;  // Make sure gameState is available to other modules
 
 // Hatchable familiars (used by eggs/mystery boxes)
 const hatchableFamiliars = [

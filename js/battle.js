@@ -48,7 +48,7 @@ function renderBattle() {
   if (playerFamiliarEl) {
     playerFamiliarEl.innerHTML = `
       <h3>${player.name || 'Unknown'}</h3>
-  <img src="${playerImg}" alt="${player.name || 'player'}" onerror="this.onerror=null;this.src='img/familiars.jpg'">
+  <img src="${playerImg}" onerror="this.onerror=null;this.src='img/familiars/familiars.png'">
       <p>HP: ${playerCurrent} / ${playerHp}</p>
       <div class="health-bar"><div class="health-bar-fill" style="width: ${playerHealthPercent}%;"></div></div>
     `;
@@ -57,7 +57,7 @@ function renderBattle() {
   if (opponentFamiliarEl) {
     opponentFamiliarEl.innerHTML = `
       <h3>${opponent.name || 'Unknown'}</h3>
-  <img src="${opponentImg}" alt="${opponent.name || 'opponent'}" onerror="this.onerror=null;this.src='img/familiars.jpg'">
+  <img src="${opponentImg}" alt="${opponent.name || 'opponent'}" onerror="this.onerror=null;this.src='img/familiars/familiars.png'">
       <p>HP: ${opponentCurrent} / ${opponentHp}</p>
       <div class="health-bar"><div class="health-bar-fill" style="width: ${opponentHealthPercent}%;"></div></div>
     `;
@@ -102,7 +102,7 @@ function playerTurn(action) {
       const oppEl = document.getElementById('opponent-familiar');
       if (oppEl) {
         oppEl.classList.add('hit', 'shake');
-  showSlash(oppEl, 'img/red claws.png');
+  showSlash(oppEl);
         setTimeout(() => oppEl.classList.remove('hit', 'shake'), 500);
       }
       break;
@@ -139,7 +139,7 @@ function opponentTurn() {
   const playerEl = document.getElementById('player-familiar');
   if (playerEl) {
     playerEl.classList.add('hit', 'shake');
-  showSlash(playerEl, 'img/red claws.png');
+  showSlash(playerEl);
     setTimeout(() => playerEl.classList.remove('hit', 'shake'), 500);
   }
 

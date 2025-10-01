@@ -7,6 +7,26 @@
   box-sizing: border-box;
 }
 
+/* Icon Styles */
+.nav-icon {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.status-icon {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+}
+
 body {
   font-family: 'MedievalSharp', cursive;
   color: #f0e6d2;
@@ -20,12 +40,12 @@ body {
 }
 
 /* Section Specific Backgrounds */
-body.home { background-image: url('img/home.jpg'); }
-body.familiars { background-image: url('img/familiars.jpg'); }
-body.inventory { background-image: url('img/inventory.jpg'); }
-body.shop { background-image: url('img/shop.jpg'); }
-body.activities { background-image: url('img/activities.jpg'); }
-body.battle { background-image: url('img/battle.jpg'); }
+body.home { background-image: url('img/assets/home.jpg'); }
+body.familiars { background-image: url('img/familiars/familiars.png'); }
+body.inventory { background-image: url('img/assets/inventory.jpg'); }
+body.shop { background-image: url('img/assets/shop.jpg'); }
+body.activities { background-image: url('img/assets/activities.jpg'); }
+body.battle { background-image: url('img/assets/battle.jpg'); }
 
 .container {
   max-width: 1200px;

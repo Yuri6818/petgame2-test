@@ -94,7 +94,7 @@ function renderFamiliars() {
   (gameState.familiars || []).forEach(fam => {
     const key = (fam.species || fam.name || 'familiar').toString().toLowerCase().replace(/\s+/g, '-');
     const imgSrc = getImageSrc(fam, 'familiar');
-  const placeholder = (familiarImages && familiarImages.default) || 'img/familiars.jpg';
+  const placeholder = (familiarImages && familiarImages.default) || 'img/familiars/familiars.png';
 
     const div = document.createElement('div');
     div.className = 'card familiar-card';
@@ -147,9 +147,10 @@ function renderInventory() {
   if (!inv.length) { container.innerHTML = '<p>Your inventory is empty.</p>'; return; }
 
   inv.forEach(item => {
+    console.log("Rendering inventory item with image:", item.image);
     const div = document.createElement('div');
     div.className = 'card item-card';
-  const img = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:64px;height:64px;" onerror="this.onerror=null;this.src='img/shop.jpg'">` : '';
+  const img = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:64px;height:64px;" onerror="this.onerror=null;this.src='${IMG_PATHS.shop}'">` : '';
     let btnHtml = item.type === 'egg' ? `<button class="btn" onclick="hatchEgg(${item.id})">Hatch</button>` : `<button class="btn" onclick="useItem(${item.id})">Use</button>`;
     div.innerHTML = `
       <div class="card-image">${img}</div>
@@ -170,7 +171,7 @@ function renderShop() {
     const div = document.createElement('div');
     div.className = 'card shop-card';
     const canAfford = (gameState[item.currency] || 0) >= item.price;
-  const imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:100px;height:100px;border-radius:12px;" onerror="this.onerror=null;this.src='img/shop.jpg'">` : '';
+  const imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:100px;height:100px;border-radius:12px;" onerror="this.onerror=null;this.src='${IMG_PATHS.shop}'">` : '';
     div.innerHTML = `
       <div class="card-image">${imgHtml}</div>
       <h3>${item.name}</h3>
@@ -189,7 +190,7 @@ function renderAllSections() {
 }
 
 /* ---------- Visual effects: slash ---------- */
-function showSlash(targetEl, imagePath = 'img/red claws.png') {
+function showSlash(targetEl, imagePath = IMG_PATHS.redClaws) {
   if (!targetEl) return;
   const img = document.createElement('img');
   img.src = imagePath;

@@ -17,18 +17,18 @@
       <div class="timer" id="serverTime"></div>
       
       <div class="nav">
-        <button id="btn-home" class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
-        <button id="btn-familiars" class="nav-btn" onclick="showSection('familiars')">🐾 Familiars</button>
-        <button id="btn-inventory" class="nav-btn" onclick="showSection('inventory')">📦 Inventory</button>
-        <button id="btn-shop" class="nav-btn" onclick="showSection('shop')">🛒 Shop</button>
-        <button id="btn-activities" class="nav-btn" onclick="showSection('activities')">⚡ Activities</button>
-        <button id="btn-battle" class="nav-btn" onclick="showSection('battle')" hidden>⚔️ Battle</button>
+        <button id="btn-home" class="nav-btn active" onclick="showSection('home')"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</button>
+        <button id="btn-familiars" class="nav-btn" onclick="showSection('familiars')"><img src="img/familiars/familiars.png" class="nav-icon" alt="Familiars"> Familiars</button>
+        <button id="btn-inventory" class="nav-btn" onclick="showSection('inventory')"><img src="img/assets/crate.png" class="nav-icon" alt="Inventory"> Inventory</button>
+        <button id="btn-shop" class="nav-btn" onclick="showSection('shop')"><img src="img/assets/shop.png" class="nav-icon" alt="Shop"> Shop</button>
+        <button id="btn-activities" class="nav-btn" onclick="showSection('activities')"><img src="img/assets/target.png" class="nav-icon" alt="Activities"> Activities</button>
+        <button id="btn-battle" class="nav-btn" onclick="showSection('battle')" hidden><img src="img/assets/battle.jpg" class="nav-icon" alt="Battle"> Battle</button>
       </div>
 
       <div class="status-bar">
-        <div class="status-item">💰 Coins: <span id="coinCount">150</span></div>
-        <div class="status-item">✨ Dust: <span id="dustCount">25</span></div>
-        <div class="status-item">🎯 Level: <span id="playerLevel">1</span></div>
+        <div class="status-item"><img src="img/assets/coins.png" class="status-icon" alt="Coins"> Coins: <span id="coinCount">150</span></div>
+        <div class="status-item"><img src="img/assets/dust.png" class="status-icon" alt="Dust"> Dust: <span id="dustCount">25</span></div>
+        <div class="status-item"><img src="img/assets/lvlup.png" class="status-icon" alt="Level"> Level: <span id="playerLevel">1</span></div>
         <div class="status-item">⭐ XP: <span id="playerXP">0</span>/100</div>
         <button id="mute-btn" class="nav-btn" onclick="toggleMute()">Mute</button>
         <button id="clear-save-btn" class="nav-btn" onclick="clearSave()">Clear Save</button>
@@ -42,18 +42,18 @@
       
       <div class="grid">
         <div class="card">
-          <div class="card-image">🎉</div>
+          <div class="card-image"><img src="img/assets/coins.png" class="card-icon" alt="Daily Bonus"></div>
           <h3>Daily Bonus</h3>
           <p>Claim your daily rewards!</p>
           <button class="btn" onclick="claimDaily()">Claim Bonus</button>
         </div>
-        
+
         <div class="card">
           <div class="card-image">📰</div>
           <h3>Latest News</h3>
           <p>New familiars and items available in the shop!</p>
         </div>
-        
+
         <div class="card">
           <div class="card-image">🏆</div>
           <h3>Achievements</h3>
