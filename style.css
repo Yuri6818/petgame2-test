@@ -45,7 +45,7 @@ body.familiars { background-image: url('img/familiars/familiars.png'); }
 body.inventory { background-image: url('img/assets/inventory.jpg'); }
 body.shop { background-image: url('img/assets/shop.jpg'); }
 body.activities { background-image: url('img/assets/activities.jpg'); }
-body.battle { background-image: url('img/assets/battle.jpg'); }
+body.battle { background-image: url('img/assets/training_field.png'); }
 
 .container {
   max-width: 1200px;
