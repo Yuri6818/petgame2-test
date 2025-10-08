@@ -41,7 +41,7 @@ body {
 
 /* Section Specific Backgrounds */
 body.home { background-image: url('img/assets/home.jpg'); }
-body.familiars { background-image: url('img/familiars/familiars.png'); }
+body.familiars { background-image: url('img/assets/pets.jpg'); }
 body.inventory { background-image: url('img/assets/inventory.jpg'); }
 body.shop { background-image: url('img/assets/shop.jpg'); }
 body.activities { background-image: url('img/assets/activities.jpg'); }
