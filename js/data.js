@@ -84,8 +84,6 @@ const shopItems = [
   { id: 203, name: "Rare Familiar Egg", price: 15, currency: "dust", image: IMG_PATHS.egg, type: "egg", description: "A rare egg that can be hatched into a powerful familiar." },
   { id: 204, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.star, description: "Doubles the XP gained for the next 3 activities.", type: "consumable" },
   { id: 205, name: "Mystery Box", price: 5, currency: "dust", image: IMG_PATHS.crate, description: "Contains a random item from the shop." },
-  // A familiar purchasable directly
-  // { id: 301, type: "familiar", name: "Griffin", price: 50, currency: "dust", image: familiarImages.griffin, hp: 110, attack: 22, defense: 12, speed: 18, description: "A majestic creature." }
 ];
 
 // Expose image maps globally

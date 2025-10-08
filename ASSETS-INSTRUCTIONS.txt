@@ -13,7 +13,7 @@ Why you see 404s:
 
 Option A - Put files where the code expects them (recommended for future portability):
 - Create a `sounds/` folder at the project root and add your audio files with the exact filenames above.
-- Create `assets/familiars/`, `assets/enemies/`, and `assets/items/` and place your images there using the names referenced in the code (e.g., `griffin.jpg`, `dragon.png`, `health_potion.png`).
+- Create `assets/familiars/`, `assets/enemies/`, and `assets/items/` and place your images there using the names referenced in the code (e.g., `dragon.png`, `health_potion.png`).
 - Rename any files with spaces (like `red claws.png`) to use hyphens: `red-claws.png` and update code if you prefer the space.
 
 Option B - Keep your current `img/` folder and let the app use those images (already applied):
