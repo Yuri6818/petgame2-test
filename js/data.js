@@ -23,6 +23,12 @@ const familiarImages = {
   griffin: 'img/familiars/griffin.jpg',
   hippogriff: 'img/familiars/grumblenook.jpg',
   grumblenook: 'img/familiars/cute-deserrt-thing.jpg',
+  bigcat: 'img/familiars/big-cat.png',
+  fennec: 'img/familiars/fennec.png',
+  fish: 'img/familiars/fish.png',
+  shadowfang: 'img/familiars/shadowfang.png',
+  unicorn: 'img/familiars/unicorn.png',
+  ursina: 'img/familiars/ursina.png',
   default: 'img/familiars/familiars.png'
 };
 
@@ -52,9 +58,13 @@ let gameState = {
   lastDaily: null,
   familiars: [
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
-  { id: 1, name: "Grumblenook", species: "grumblenook", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/cute-deserrt-thing.jpg", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
+  { id: 1, name: "Unicorn", species: "unicorn", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/unicorn.png", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
   { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/familiars/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
-  { id: 3, name: "Thistle", species: "hippogriff", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/griffin.jpg", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 }
+  { id: 3, name: "Thistle", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 },
+  { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15 },
+  { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20 },
+  { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 10, defense: 8, speed: 22 },
+  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 50, attack: 8, defense: 5, speed: 30 }
   ],
   inventory: [
   { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores familiar happiness and slightly heals.' },
