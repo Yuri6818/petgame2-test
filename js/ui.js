@@ -115,7 +115,7 @@ function renderFamiliars() {
         <div class="stat"><span>🍖</span> <span>${fam.hunger ?? 0}%</span></div>
         <div class="stat"><span>🛡️</span> <span>${fam.defense ?? 0}</span></div>
         <div class="stat"><span>💧</span> <span>${fam.thirst ?? 0}%</span></div>
-        <div class="stat"><span>💨</span> <span>${fam.speed ?? 0}</span></div>
+        <div class="stat"><span>⚡</span> <span>${fam.speed ?? 0}</span></div>
       </div>
 
       <div class="familiar-actions">
