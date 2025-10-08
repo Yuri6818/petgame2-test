@@ -109,17 +109,13 @@ function renderFamiliars() {
       <h3 class="fam-name">${fam.name || 'Unnamed'}</h3>
       <p class="fam-level">Level ${fam.level || 1} ${fam.species ? '(' + fam.species + ')' : ''}</p>
 
-      <div class="fam-stats-row">
-        <div class="fam-needs">
-          <div class="stat"><span class="stat-label">❤️</span> <span>${fam.happiness ?? 0}%</span></div>
-          <div class="stat"><span class="stat-label">🍖</span> <span>${fam.hunger ?? 0}%</span></div>
-          <div class="stat"><span class="stat-label">💧</span> <span>${fam.thirst ?? 0}%</span></div>
-        </div>
-        <div class="fam-core">
-          <div class="stat"><span class="stat-label">⚔️</span> <span>${fam.attack ?? 0}</span></div>
-          <div class="stat"><span class="stat-label">🛡️</span> <span>${fam.defense ?? 0}</span></div>
-          <div class="stat"><span class="stat-label">💨</span> <span>${fam.speed ?? 0}</span></div>
-        </div>
+      <div class="fam-stats-grid">
+        <div class="stat"><span>❤️</span> <span>${fam.happiness ?? 0}%</span></div>
+        <div class="stat"><span>⚔️</span> <span>${fam.attack ?? 0}</span></div>
+        <div class="stat"><span>🍖</span> <span>${fam.hunger ?? 0}%</span></div>
+        <div class="stat"><span>🛡️</span> <span>${fam.defense ?? 0}</span></div>
+        <div class="stat"><span>💧</span> <span>${fam.thirst ?? 0}%</span></div>
+        <div class="stat"><span>💨</span> <span>${fam.speed ?? 0}</span></div>
       </div>
 
       <div class="familiar-actions">

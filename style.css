@@ -179,6 +179,29 @@ h1, h2, h3 {
 
 .familiar-thumb { width: 100%; height: 100%; object-fit: cover; display:block; }
 
+.fam-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.stat-label {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
 /* Buttons */
 .btn {
   background: linear-gradient(to bottom, #4a2e5a, #2a0e3a);
