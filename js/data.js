@@ -60,7 +60,7 @@ let gameState = {
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
   { id: 1, name: "Unicorn", species: "unicorn", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/unicorn.png", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 6, speed: 25 },
   { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/familiars/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
-  { id: 3, name: "Thistle", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 },
+  { id: 3, name: "Ursina", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 },
   { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15 },
   { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20 },
   { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 10, defense: 8, speed: 22 },
@@ -86,7 +86,7 @@ const shopItems = [
   { id: 204, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.star, description: "Doubles the XP gained for the next 3 activities.", type: "consumable" },
   { id: 205, name: "Mystery Box", price: 5, currency: "dust", image: IMG_PATHS.crate, description: "Contains a random item from the shop." },
   // A familiar purchasable directly
-  { id: 301, type: "familiar", name: "Griffin", price: 50, currency: "dust", image: familiarImages.griffin, hp: 110, attack: 22, defense: 12, speed: 18, description: "A majestic creature." }
+  // { id: 301, type: "familiar", name: "Griffin", price: 50, currency: "dust", image: familiarImages.griffin, hp: 110, attack: 22, defense: 12, speed: 18, description: "A majestic creature." }
 ];
 
 // Expose image maps globally
@@ -98,8 +98,8 @@ window.gameState = gameState;  // Make sure gameState is available to other modu
 
 // Hatchable familiars (used by eggs/mystery boxes)
 const hatchableFamiliars = [
-  { name: "Zephyr", image: familiarImages.griffin, hp: 100, attack: 20, defense: 10, speed: 25 },
-  { name: 'Pip', image: familiarImages.cat, hp: 60, attack: 8, defense: 6, speed: 30 },
+  { name: "Zephyr", image: familiarImages.shadowfang, hp: 100, attack: 20, defense: 10, speed: 25 },
+  { name: 'Pip', image: familiarImages.fish, hp: 60, attack: 8, defense: 6, speed: 30 },
   { name: 'Smokey', image: familiarImages.dragon, hp: 110, attack: 23, defense: 12, speed: 12 },
   { name: 'Fang', image: familiarImages.wolf, hp: 90, attack: 18, defense: 12, speed: 15 }
 ];
