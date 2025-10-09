@@ -65,6 +65,7 @@ let gameState = {
   { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 10, defense: 8, speed: 22 },
   { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 50, attack: 8, defense: 5, speed: 30 }
   ],
+  pound: [],
   inventory: [
   { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores familiar happiness and slightly heals.' },
   { id: 102, name: "Magic Crystal", image: IMG_PATHS.crystal, quantity: 1, type: 'consumable', description: 'Grants bonus XP when used.' }

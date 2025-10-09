@@ -270,8 +270,6 @@ function startActivity(activityName) {
 function startForaging() { startActivity('foraging'); }
 function startMining() { startActivity('mining'); }
 function startFishing() { startActivity('fishing'); }
-function startCatching() { startActivity('catching'); }
-function startEnchanting() { startActivity('enchanting'); }
 
 function completeActivity(activityName) {
   const activity = gameState.activities[activityName];
@@ -291,59 +289,103 @@ function completeActivity(activityName) {
     foraging: { coins: 15, dust: 2, xp: 10 },
     mining: { coins: 25, dust: 1, xp: 15 },
     fishing: { coins: 20, dust: 3, xp: 12 },
-    catching: { coins: 10, dust: 5, xp: 20 },
-    enchanting: { coins: 10, dust: 5, xp: 20 }
   };
 
   const reward = rewards[activityName];
-  if (reward) gainXP(reward.xp);
-
-  if (activityName === 'catching') {
-    if (Math.random() < 0.5) {
-      const randomItem = {
-        name: `Wildling ${gameState.familiars.length + 1}`,
-  image: enemyImages.default || 'img/assets/battle.jpg',
-        hp: 40,
-        attack: 8,
-        defense: 4,
-        speed: 12
-      };
-      const randomFamiliar = createFamiliarFromItem(randomItem, Date.now() + Math.floor(Math.random() * 1000));
-      gameState.familiars.push(randomFamiliar);
-      renderFamiliars();
-      showNotification(`You caught a new familiar!`);
-      celebrate();
-    } else {
-      showNotification(`The familiar got away...`);
-    }
-  } else if (activityName === 'enchanting') {
-    if (Math.random() < 0.5) {
-      const randomItem = {
-        name: `Sprite ${gameState.familiars.length + 1}`,
-  image: familiarImages.cat || 'img/familiars/cat.png',
-        hp: 60,
-        attack: 12,
-        defense: 8,
-        speed: 25
-      };
-      const randomFamiliar = createFamiliarFromItem(randomItem, Date.now() + Math.floor(Math.random() * 1000));
-      gameState.familiars.push(randomFamiliar);
-      renderFamiliars();
-      showNotification(`You enchanted a new familiar!`);
-      celebrate();
-    } else {
-      showNotification(`The familiar resisted the enchantment...`);
-    }
-  } else {
-    if (reward) {
-      gameState.coins += reward.coins;
-      gameState.dust += reward.dust;
-      spawnOrb(coinCountEl);
-      showNotification(`${activityName.charAt(0).toUpperCase() + activityName.slice(1)} complete! +${reward.coins} coins, +${reward.dust} dust, +${reward.xp} XP`);
-    }
+  if (reward) {
+    gainXP(reward.xp);
+    gameState.coins += reward.coins;
+    gameState.dust += reward.dust;
+    spawnOrb(coinCountEl);
+    showNotification(`${activityName.charAt(0).toUpperCase() + activityName.slice(1)} complete! +${reward.coins} coins, +${reward.dust} dust, +${reward.xp} XP`);
   }
 
   saveGame();
+}
+
+function adoptFamiliar() {
+  if (gameState.familiars.length >= 20) {
+    showNotification("You have too many familiars! Consider sending one to the pound.");
+    return;
+  }
+
+  const name = document.getElementById('adopt-name').value.trim();
+  const species = document.getElementById('adopt-species').value;
+
+  if (!name) {
+    showNotification("Your new familiar needs a name!");
+    return;
+  }
+
+  const newFamiliar = createFamiliarFromItem({ name, species }, Date.now());
+  gameState.familiars.push(newFamiliar);
+
+  showNotification(`You adopted ${name} the ${species}!`);
+  renderFamiliars();
+  saveGame();
+  celebrate();
+}
+
+function sendToPound(familiarId) {
+  const cost = 200000;
+  if (gameState.coins < cost) {
+    showNotification(`You need 200,000 coins to send a familiar to the pound.`);
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to send this familiar to the pound for ${cost} coins? This is permanent.`)) {
+    return;
+  }
+
+  const familiarIndex = gameState.familiars.findIndex(f => f.id === familiarId);
+  if (familiarIndex === -1) {
+    showNotification("Familiar not found.");
+    return;
+  }
+
+  const [familiar] = gameState.familiars.splice(familiarIndex, 1);
+  gameState.pound.push(familiar);
+  gameState.coins -= cost;
+
+  showNotification(`${familiar.name} has been sent to the pound.`);
+  updateUI();
+  renderFamiliars();
+  renderPoundPage();
+  saveGame();
+}
+
+function adoptFromPound(familiarId) {
+  const cost = 250000;
+  if (gameState.coins < cost) {
+    showNotification(`You need 250,000 coins to adopt from the pound.`);
+    return;
+  }
+
+  if (gameState.familiars.length >= 20) {
+    showNotification("You have too many familiars!");
+    return;
+  }
+
+  const familiarIndex = gameState.pound.findIndex(f => f.id === familiarId);
+  if (familiarIndex === -1) {
+    showNotification("Familiar not found in the pound.");
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to adopt this familiar for ${cost} coins?`)) {
+    return;
+  }
+
+  const [familiar] = gameState.pound.splice(familiarIndex, 1);
+  gameState.familiars.push(familiar);
+  gameState.coins -= cost;
+
+  showNotification(`You have adopted ${familiar.name}!`);
+  updateUI();
+  renderFamiliars();
+  renderPoundPage();
+  saveGame();
+  celebrate();
 }
 
 function interactFamiliar(familiarId, interactionType) {

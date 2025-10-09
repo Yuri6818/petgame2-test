@@ -127,6 +127,7 @@ function renderFamiliars() {
 
       <div class="familiar-actions">
         <button class="btn" onclick="renameFamiliar(${fam.id})">Rename</button>
+        <button class="btn" onclick="sendToPound(${fam.id})">Send to Pound</button>
       </div>
     `;
 
@@ -179,11 +180,61 @@ function renderShop() {
   });
 }
 
+function renderAdoptPage() {
+  const container = document.getElementById('adopt');
+  if (!container) return;
+  // Basic form for adoption
+  container.innerHTML += `
+    <div class="grid">
+      <input type="text" id="adopt-name" placeholder="Familiar Name" />
+      <select id="adopt-species">
+        <option value="cat">Cat</option>
+        <option value="wolf">Wolf</option>
+        <option value="dragon">Dragon</option>
+      </select>
+      <button class="btn" onclick="adoptFamiliar()">Adopt</button>
+    </div>
+  `;
+}
+
+function renderPoundPage() {
+  const container = document.getElementById('pound');
+  if (!container) return;
+  container.innerHTML += '<div class="grid" id="poundContainer"></div>';
+  const poundContainer = document.getElementById('poundContainer');
+  if (!poundContainer) return;
+  poundContainer.innerHTML = '';
+
+  if (!gameState.pound || gameState.pound.length === 0) {
+    poundContainer.innerHTML = '<p>The pound is currently empty.</p>';
+    return;
+  }
+
+  gameState.pound.forEach(fam => {
+    const imgSrc = getImageSrc(fam, 'familiar');
+    const placeholder = familiarImages.default;
+    const div = document.createElement('div');
+    div.className = 'card familiar-card';
+    div.innerHTML = `
+      <div class="card-image">
+        <img src="${imgSrc}" alt="${fam.name}" class="familiar-thumb" onerror="this.onerror=null;this.src='${placeholder}'">
+      </div>
+      <h3>${fam.name}</h3>
+      <p>Level ${fam.level}</p>
+      <button class="btn" onclick="adoptFromPound(${fam.id})">Adopt (250,000 Coins)</button>
+    `;
+    poundContainer.appendChild(div);
+  });
+}
+
 function renderAllSections() {
   renderFamiliars();
   renderInventory();
   renderShop();
+  renderAdoptPage();
+  renderPoundPage();
 }
+
 
 /* ---------- Visual effects: slash ---------- */
 function showSlash(targetEl, imagePath = IMG_PATHS.redClaws) {
