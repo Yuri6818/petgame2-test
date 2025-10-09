@@ -46,6 +46,8 @@ body.inventory { background-image: url('img/assets/inventory.jpg'); }
 body.shop { background-image: url('img/assets/shop.jpg'); }
 body.activities { background-image: url('img/assets/activities.jpg'); }
 body.battle { background-image: url('img/assets/trainging-field.png'); }
+body.adopt { background-image: url('img/assets/adopt.jpg'); }
+body.pound { background-image: url('img/assets/pound.jpg'); }
 
 .container {
   max-width: 1200px;

@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="home">
+<body class="activities">
   <div class="container">
     <!-- Header -->
     <div class="header">
@@ -17,11 +17,11 @@
       <div class="timer" id="serverTime"></div>
       
       <div class="nav">
-        <a href="index.html" id="btn-home" class="nav-btn active"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</a>
+        <a href="index.html" id="btn-home" class="nav-btn"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</a>
         <a href="familiars.html" id="btn-familiars" class="nav-btn"><img src="img/familiars/familiars.png" class="nav-icon" alt="Familiars"> Familiars</a>
         <a href="inventory.html" id="btn-inventory" class="nav-btn"><img src="img/assets/crate.png" class="nav-icon" alt="Inventory"> Inventory</a>
         <a href="shop.html" id="btn-shop" class="nav-btn"><img src="img/assets/shop.png" class="nav-icon" alt="Shop"> Shop</a>
-        <a href="activities.html" id="btn-activities" class="nav-btn"><img src="img/assets/target.png" class="nav-icon" alt="Activities"> Activities</a>
+        <a href="activities.html" id="btn-activities" class="nav-btn active"><img src="img/assets/target.png" class="nav-icon" alt="Activities"> Activities</a>
         <a href="adopt.html" id="btn-adopt" class="nav-btn"><img src="img/assets/egg.jpg" class="nav-icon" alt="Adopt"> Adopt</a>
         <a href="pound.html" id="btn-pound" class="nav-btn"><img src="img/assets/crystal.jpg" class="nav-icon" alt="Pound"> Pound</a>
         <a href="battle.html" id="btn-battle" class="nav-btn" hidden><img src="img/assets/battle.jpg" class="nav-icon" alt="Battle"> Battle</a>
@@ -37,30 +37,39 @@
       </div>
     </div>
 
-    <!-- Home Section -->
-    <div class="section active" id="home">
-      <h2>🏠 Welcome Home!</h2>
-      <p>Welcome, Keeper, to the realm of Aethelburg! Pledge your allegiance and begin your adventure.</p>
-      
-      <div class="grid">
-        <div class="card">
-          <div class="card-image"><img src="img/assets/coins.png" class="card-icon" alt="Daily Bonus"></div>
-          <h3>Daily Bonus</h3>
-          <p>Claim your daily rewards!</p>
-          <button class="btn" onclick="claimDaily()">Claim Bonus</button>
+    <!-- Activities Section -->
+    <div class="section active" id="activities">
+      <h2>⚡ Activities</h2>
+      <p>Engage in various activities to earn rewards and experience!</p>
+      <div class="activity-section">
+        
+        <div class="activity-card">
+          <h3>🌿 Foraging</h3>
+          <p>Search for herbs and magical items in the forest.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="foragingProgress" style="width: 0%"></div>
+          </div>
+          <button class="activity-btn" id="foragingBtn" onclick="startForaging()">Start Foraging</button>
         </div>
 
-        <div class="card">
-          <div class="card-image">📰</div>
-          <h3>Latest News</h3>
-          <p>New familiars and items available in the shop!</p>
+        <div class="activity-card">
+          <h3>⛏️ Mining</h3>
+          <p>Dig deep to find precious gems and minerals.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="miningProgress" style="width: 0%"></div>
+          </div>
+          <button class="activity-btn" id="miningBtn" onclick="startMining()">Start Mining</button>
         </div>
 
-        <div class="card">
-          <div class="card-image">🏆</div>
-          <h3>Achievements</h3>
-          <p>Track your progress and unlock rewards</p>
+        <div class="activity-card">
+          <h3>🎣 Fishing</h3>
+          <p>Cast your line and catch magical fish.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="fishingProgress" style="width: 0%"></div>
+          </div>
+          <button class="activity-btn" id="fishingBtn" onclick="startFishing()">Start Fishing</button>
         </div>
+
       </div>
     </div>
 

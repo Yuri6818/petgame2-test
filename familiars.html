@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="home">
+<body class="familiars">
   <div class="container">
     <!-- Header -->
     <div class="header">
@@ -17,8 +17,8 @@
       <div class="timer" id="serverTime"></div>
       
       <div class="nav">
-        <a href="index.html" id="btn-home" class="nav-btn active"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</a>
-        <a href="familiars.html" id="btn-familiars" class="nav-btn"><img src="img/familiars/familiars.png" class="nav-icon" alt="Familiars"> Familiars</a>
+        <a href="index.html" id="btn-home" class="nav-btn"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</a>
+        <a href="familiars.html" id="btn-familiars" class="nav-btn active"><img src="img/familiars/familiars.png" class="nav-icon" alt="Familiars"> Familiars</a>
         <a href="inventory.html" id="btn-inventory" class="nav-btn"><img src="img/assets/crate.png" class="nav-icon" alt="Inventory"> Inventory</a>
         <a href="shop.html" id="btn-shop" class="nav-btn"><img src="img/assets/shop.png" class="nav-icon" alt="Shop"> Shop</a>
         <a href="activities.html" id="btn-activities" class="nav-btn"><img src="img/assets/target.png" class="nav-icon" alt="Activities"> Activities</a>
@@ -37,31 +37,11 @@
       </div>
     </div>
 
-    <!-- Home Section -->
-    <div class="section active" id="home">
-      <h2>🏠 Welcome Home!</h2>
-      <p>Welcome, Keeper, to the realm of Aethelburg! Pledge your allegiance and begin your adventure.</p>
-      
-      <div class="grid">
-        <div class="card">
-          <div class="card-image"><img src="img/assets/coins.png" class="card-icon" alt="Daily Bonus"></div>
-          <h3>Daily Bonus</h3>
-          <p>Claim your daily rewards!</p>
-          <button class="btn" onclick="claimDaily()">Claim Bonus</button>
-        </div>
-
-        <div class="card">
-          <div class="card-image">📰</div>
-          <h3>Latest News</h3>
-          <p>New familiars and items available in the shop!</p>
-        </div>
-
-        <div class="card">
-          <div class="card-image">🏆</div>
-          <h3>Achievements</h3>
-          <p>Track your progress and unlock rewards</p>
-        </div>
-      </div>
+    <!-- Familiars Section -->
+    <div class="section active" id="familiars">
+      <h2>🐾 Your Familiars</h2>
+      <p>Manage and interact with your loyal familiars.</p>
+      <div class="grid" id="familiarContainer"></div>
     </div>
 
   </div>
