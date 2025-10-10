@@ -327,13 +327,13 @@ function adoptFamiliar() {
 }
 
 function sendToPound(familiarId) {
-  const cost = 200000;
+  const cost = 50;
   if (gameState.coins < cost) {
-    showNotification(`You need 200,000 coins to send a familiar to the pound.`);
+    showNotification(`You need 50 coins to send a familiar to the pound.`);
     return;
   }
 
-  if (!confirm(`Are you sure you want to send this familiar to the pound for ${cost} coins? This is permanent.`)) {
+  if (!confirm(`Are you sure you want to send this familiar to the pound for 50 coins? This is permanent.`)) {
     return;
   }
 
@@ -355,9 +355,9 @@ function sendToPound(familiarId) {
 }
 
 function adoptFromPound(familiarId) {
-  const cost = 250000;
+  const cost = 100;
   if (gameState.coins < cost) {
-    showNotification(`You need 250,000 coins to adopt from the pound.`);
+    showNotification(`You need 100 coins to adopt from the pound.`);
     return;
   }
 
@@ -372,7 +372,7 @@ function adoptFromPound(familiarId) {
     return;
   }
 
-  if (!confirm(`Are you sure you want to adopt this familiar for ${cost} coins?`)) {
+  if (!confirm(`Are you sure you want to adopt this familiar for 100 coins?`)) {
     return;
   }
 

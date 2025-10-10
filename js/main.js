@@ -45,9 +45,6 @@ function loadGame() {
         }
       }
 
-      // Don't load familiars from save, to force using the ones from data.js
-      delete savedGameState.familiars;
-
       // Ensure activities keys exist
       const requiredActivities = ['foraging','mining','fishing','catching','enchanting'];
       if (!savedGameState.activities) savedGameState.activities = {};

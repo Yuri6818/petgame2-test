@@ -184,7 +184,7 @@ function renderAdoptPage() {
   const container = document.getElementById('adopt');
   if (!container) return;
   // Basic form for adoption
-  container.innerHTML += `
+  container.innerHTML = `
     <div class="grid">
       <input type="text" id="adopt-name" placeholder="Familiar Name" />
       <select id="adopt-species">
@@ -200,7 +200,7 @@ function renderAdoptPage() {
 function renderPoundPage() {
   const container = document.getElementById('pound');
   if (!container) return;
-  container.innerHTML += '<div class="grid" id="poundContainer"></div>';
+  container.innerHTML = '<div class="grid" id="poundContainer"></div>';
   const poundContainer = document.getElementById('poundContainer');
   if (!poundContainer) return;
   poundContainer.innerHTML = '';
@@ -221,7 +221,7 @@ function renderPoundPage() {
       </div>
       <h3>${fam.name}</h3>
       <p>Level ${fam.level}</p>
-      <button class="btn" onclick="adoptFromPound(${fam.id})">Adopt (250,000 Coins)</button>
+      <button class="btn" onclick="adoptFromPound(${fam.id})">Adopt (100 Coins)</button>
     `;
     poundContainer.appendChild(div);
   });
