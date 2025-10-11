@@ -64,13 +64,19 @@ function loadGame() {
 
 // Initialize game when page loads
 // Background music handling (loop across pages)
-const bgMusic = document.getElementById('bg-music');
-let musicMuted = false;
-
 function initMusic() {
+  const bgMusic = document.getElementById('bg-music');
   if (!bgMusic) return;
+  
   bgMusic.loop = true;
-  bgMusic.volume = 0.35;
+  
+  // Apply saved settings
+  applyAudioSettings();
+  
+  // Create settings dropdown
+  createSettingsDropdown();
+  
+  // Try to play
   bgMusic.play().catch(() => {
     const startOnce = () => {
       bgMusic.play().catch(()=>{});
@@ -83,11 +89,17 @@ function initMusic() {
 }
 
 function toggleMute() {
-  if (!bgMusic) return;
-  musicMuted = !musicMuted;
-  bgMusic.muted = musicMuted;
-  const btn = document.getElementById('mute-btn');
-  if (btn) btn.textContent = musicMuted ? 'Unmute' : 'Mute';
+  const settings = loadAudioSettings();
+  settings.muted = !settings.muted;
+  saveAudioSettings(settings);
+  applyAudioSettings();
+}
+
+function updateVolume(value) {
+  const settings = loadAudioSettings();
+  settings.volume = parseFloat(value);
+  saveAudioSettings(settings);
+  applyAudioSettings();
 }
 
 function clearSave() {
