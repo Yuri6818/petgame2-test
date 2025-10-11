@@ -1,7 +1,8 @@
 // main.js
 // Initialize Game
 function init() {
-  document.body.className = 'home'; // Set initial background
+  // Don't override body class - let each page set its own background
+  // document.body.className = 'home'; // Removed - let HTML files set their own body class
   loadSounds();
   loadGame();
   updateUI();

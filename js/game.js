@@ -179,15 +179,25 @@ function hatchEgg(itemId) {
 
 // Create familiar with safe defaults
 function createFamiliarFromItem(item, newId) {
+  const species = item.species || (item.name || 'familiar').toLowerCase().replace(/\s+/g, '');
+  
+  // Use familiarImages mapping if available, otherwise use default
+  let imagePath = item.image || item.img;
+  if (!imagePath && window.familiarImages && window.familiarImages[species]) {
+    imagePath = window.familiarImages[species];
+  } else if (!imagePath) {
+    imagePath = window.familiarImages ? window.familiarImages.default : 'img/familiars/familiars.png';
+  }
+  
   return {
     id: newId,
     name: item.name || 'New Familiar',
-    species: item.species || (item.name || 'familiar').toLowerCase().replace(/\s+/g, ''),
+    species: species,
     color: item.color || 'default',
     marking: item.marking || 'none',
     level: item.level || 1,
     xp: item.xp || 0,
-  image: item.image || item.img || `img/${(item.name || 'familiar').toLowerCase().replace(/\s+/g,'_')}.png`,
+    image: imagePath,
     hunger: item.hunger || 100,
     thirst: item.thirst || 100,
     happiness: item.happiness || 100,

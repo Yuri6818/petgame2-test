@@ -7,7 +7,37 @@ let battleState = {
   timeoutId: null
 };
 
+// Initialize battle if we're on the battle page and have a familiar ID in the URL
+window.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname.toLowerCase();
+  const isBattlePage = path.includes("battle.html");
+  
+  if (isBattlePage) {
+    // Check for familiar ID in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const familiarId = urlParams.get('familiar');
+    
+    if (familiarId && gameState.familiars.length > 0) {
+      // Convert to number if it's a string
+      const id = parseInt(familiarId);
+      if (!isNaN(id)) {
+        startBattle(id);
+      }
+    }
+  }
+});
+
 function startBattle(familiarId) {
+  // Check if we're on the battle page - if not, navigate there first
+  const path = window.location.pathname.toLowerCase();
+  const isBattlePage = path.includes("battle.html");
+  
+  if (!isBattlePage) {
+    // Navigate to battle page and pass the familiar ID
+    window.location.href = `battle.html?familiar=${familiarId}`;
+    return;
+  }
+
   const playerFamiliar = gameState.familiars.find(f => f.id === familiarId);
   if (!playerFamiliar) {
     showNotification('Selected familiar not found for battle.');
@@ -212,9 +242,7 @@ function endBattle(result) {
   };
 
   setTimeout(() => {
-    showSection('familiars');
-    // refresh UI and re-show actions
-    try { renderAllSections(); updateUI(); } catch (e) {}
-    if (battleActionsEl) battleActionsEl.style.display = 'flex';
+    // Navigate to familiars page instead of just changing section
+    window.location.href = 'familiars.html';
   }, 1400);
 }
