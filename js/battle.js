@@ -213,13 +213,29 @@ function endBattle(result) {
   if (result === 'win') {
     playSound('sounds/win.wav');
     logBattle(`You defeated ${battleState.opponentFamiliar.name}!`);
-    const xpGained = (battleState.opponentFamiliar.level || 1) * 5;
+    
+    // Calculate XP based on opponent's level and stats
+    const opponentTotal = (battleState.opponentFamiliar.attack || 0) + 
+                         (battleState.opponentFamiliar.defense || 0) + 
+                         (battleState.opponentFamiliar.speed || 0);
+    const xpGained = Math.floor((battleState.opponentFamiliar.level || 1) * 10 + opponentTotal * 0.5);
+    
+    // Award XP to player
     gainXP(xpGained);
     
+    // Find and update the familiar
     const familiar = gameState.familiars.find(f => f.id === battleState.playerFamiliar.id);
     if (familiar) {
+      // Award familiar XP
       familiar.xp = (familiar.xp || 0) + xpGained;
+      logBattle(`${familiar.name} gained ${xpGained} XP!`);
+      
+      // Try to level up (might level multiple times if enough XP)
       levelUpFamiliar(familiar);
+      
+      // Ensure changes are saved and displayed
+      saveGame();
+      renderFamiliars();
     }
 
     showNotification(`You and your familiar gained ${xpGained} XP!`);

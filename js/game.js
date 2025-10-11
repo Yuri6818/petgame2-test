@@ -224,16 +224,31 @@ function levelUp() {
 
 function levelUpFamiliar(familiar) {
   if (familiar.xp >= 100) {
+    // Max level check
+    if (familiar.level >= 100) {
+      familiar.xp = 100; // Cap XP at 100 for max level
+      saveGame();
+      return;
+    }
+
     familiar.level++;
     familiar.xp -= 100;
-    familiar.hp += 10;
-    familiar.attack += 2;
-    familiar.defense += 2;
-    familiar.speed += 1;
-    showNotification(`${familiar.name} leveled up to level ${familiar.level}!`);
+    
+    // Increase stats with caps
+    familiar.hp = Math.min(500, familiar.hp + 10);  // Cap HP at 500
+    familiar.attack = Math.min(100, familiar.attack + 2);  // Cap attack at 100
+    familiar.defense = Math.min(100, familiar.defense + 2);  // Cap defense at 100
+    familiar.speed = Math.min(100, familiar.speed + 1);  // Cap speed at 100
+    
+    showNotification(`${familiar.name} leveled up to level ${familiar.level}! 🎉\nStats increased: HP +10, Attack +2, Defense +2, Speed +1`);
     celebrate();
     renderFamiliars();
     saveGame();
+    
+    // Check if there's still excess XP for another level
+    if (familiar.xp >= 100) {
+      levelUpFamiliar(familiar); // Recursively level up if more XP available
+    }
   }
 }
 
