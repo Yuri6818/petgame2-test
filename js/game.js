@@ -201,9 +201,9 @@ function createFamiliarFromItem(item, newId) {
     hunger: item.hunger || 100,
     thirst: item.thirst || 100,
     happiness: item.happiness || 100,
-    hp: Number(item.hp) || 50,
+    hp: Number(item.hp) || 60,
     attack: Number(item.attack) || 10,
-    defense: Number(item.defense) || 5,
+    defense: Number(item.defense) || 10,
     speed: Number(item.speed) || 10
   };
 }

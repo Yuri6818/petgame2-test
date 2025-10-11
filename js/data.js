@@ -60,12 +60,12 @@ let gameState = {
   { id: 3, name: "Ursina", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 },
   { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15 },
   { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20 },
-  { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 10, defense: 10, speed: 22 },
-  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 10, speed: 30 }
+  { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 13, defense: 11, speed: 22 },
+  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 11, speed: 30 }
   ],
   pound: [],
   inventory: [
-  { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores familiar happiness and slightly heals.' },
+  { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores 20 HP to your familiar during battle.', effect: { type: "heal", amount: 20 } },
   { id: 102, name: "Magic Crystal", image: IMG_PATHS.crystal, quantity: 1, type: 'consumable', description: 'Grants bonus XP when used.' }
   ],
   activities: {
@@ -78,7 +78,7 @@ let gameState = {
 
 // Shop items: prefer `image` paths over emoji. Drop images into assets/shop
 const shopItems = [
-  { id: 201, name: "Health Potion", price: 20, currency: "coins", image: IMG_PATHS.healthPot, description: "Restores 20 health to all familiars.", type: "consumable" },
+  { id: 201, name: "Health Potion", price: 20, currency: "coins", image: IMG_PATHS.healthPot, description: "Restores 20 HP to your familiar during battle.", type: "consumable", effect: { type: "heal", amount: 20 } },
   { id: 202, name: "Magic Sword", price: 100, currency: "coins", image: IMG_PATHS.sword, description: "Increases your familiar's attack by 10 for the next battle.", type: "consumable" },
   { id: 204, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.star, description: "Doubles the XP gained for the next 3 activities.", type: "consumable" },
   { id: 205, name: "Mystery Box", price: 5, currency: "dust", image: IMG_PATHS.crate, description: "Contains a random item from the shop." },

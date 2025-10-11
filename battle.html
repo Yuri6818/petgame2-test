@@ -54,7 +54,15 @@
       <div class="battle-actions" id="battle-actions">
         <button class="btn" onclick="battleAction('attack')">Attack</button>
         <button class="btn" onclick="battleAction('defend')">Defend</button>
+        <button class="btn" onclick="battleAction('items')">Items</button>
         <button class="btn" onclick="battleAction('run')">Run</button>
+      </div>
+      
+      <div id="item-menu" style="display: none; margin-top: 20px;">
+        <div class="battle-items">
+          <!-- Items will be rendered here -->
+        </div>
+        <button class="btn" onclick="hideItemMenu()">Cancel</button>
       </div>
     </div>
 

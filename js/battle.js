@@ -4,7 +4,8 @@ let battleState = {
   opponentFamiliar: null,
   turn: 'player',
   log: [],
-  timeoutId: null
+  timeoutId: null,
+  itemMenuOpen: false
 };
 
 // Initialize battle if we're on the battle page and have a familiar ID in the URL
@@ -105,9 +106,80 @@ function logBattle(message) {
   battleLogEl.scrollTop = battleLogEl.scrollHeight;
 }
 
+function showItemMenu() {
+  const itemMenu = document.getElementById('item-menu');
+  const battleActions = document.getElementById('battle-actions');
+  
+  // Get consumable items from inventory
+  const consumables = gameState.inventory.filter(item => 
+    item.type === 'consumable' && item.quantity > 0
+  );
+  
+  // Render items
+  const itemsContainer = itemMenu.querySelector('.battle-items');
+  itemsContainer.innerHTML = consumables.map(item => `
+    <div class="battle-item" onclick="useItem(${item.id})">
+      <img src="${item.image}" alt="${item.name}" style="width: 40px; height: 40px;">
+      <span>${item.name} (${item.quantity})</span>
+    </div>
+  `).join('');
+  
+  battleActions.style.display = 'none';
+  itemMenu.style.display = 'block';
+  battleState.itemMenuOpen = true;
+}
+
+function hideItemMenu() {
+  const itemMenu = document.getElementById('item-menu');
+  const battleActions = document.getElementById('battle-actions');
+  
+  itemMenu.style.display = 'none';
+  battleActions.style.display = 'flex';
+  battleState.itemMenuOpen = false;
+}
+
+function useItem(itemId) {
+  const item = gameState.inventory.find(i => i.id === itemId);
+  if (!item || item.quantity <= 0) return;
+
+  let used = false;
+  const player = battleState.playerFamiliar;
+
+  if (item.name.toLowerCase().includes('health potion')) {
+    // Health potion heals for 20 HP
+    const healAmount = 20;
+    const maxHp = Number(player.hp);
+    const currentHp = Number(player.currentHp);
+    
+    if (currentHp < maxHp) {
+      player.currentHp = Math.min(maxHp, currentHp + healAmount);
+      logBattle(`Used ${item.name}! ${player.name} recovered ${healAmount} HP!`);
+      used = true;
+    } else {
+      logBattle(`${player.name} already has full HP!`);
+      return; // Don't consume the item if HP is full
+    }
+  }
+
+  if (used) {
+    // Consume the item
+    item.quantity--;
+    saveGame();
+    hideItemMenu();
+    renderBattle();
+    // End turn
+    battleState.turn = 'opponent';
+    battleState.timeoutId = setTimeout(opponentTurn, 900);
+  }
+}
+
 function battleAction(action) {
   if (battleState.turn === 'player') {
-    playerTurn(action);
+    if (action === 'items') {
+      showItemMenu();
+    } else {
+      playerTurn(action);
+    }
   }
 }
 

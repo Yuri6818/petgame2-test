@@ -356,6 +356,42 @@ h1, h2, h3 {
 .egg.wobble { animation: wobble 600ms ease-in-out infinite; }
 .egg.crack { /* visual crack via pseudo or removed for brevity */ }
 
+/* Battle Item Menu */
+.battle-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.battle-item {
+  background: rgba(42, 14, 58, 0.9);
+  border: 2px solid #ffd700;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.battle-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px #ffd700;
+}
+
+.battle-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.battle-item span {
+  color: #ffd700;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .container { padding: 10px; }
   .grid { grid-template-columns: 1fr; gap: 15px; }
