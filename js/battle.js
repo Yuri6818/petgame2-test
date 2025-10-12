@@ -145,19 +145,67 @@ function useItem(itemId) {
   let used = false;
   const player = battleState.playerFamiliar;
 
-  if (item.name.toLowerCase().includes('health potion')) {
-    // Health potion heals for 20 HP
-    const healAmount = 20;
-    const maxHp = Number(player.hp);
-    const currentHp = Number(player.currentHp);
-    
-    if (currentHp < maxHp) {
-      player.currentHp = Math.min(maxHp, currentHp + healAmount);
-      logBattle(`Used ${item.name}! ${player.name} recovered ${healAmount} HP!`);
-      used = true;
-    } else {
-      logBattle(`${player.name} already has full HP!`);
-      return; // Don't consume the item if HP is full
+  if (!player) {
+    logBattle("No familiar selected for item use!");
+    return;
+  }
+
+  if (item.effect) {
+    switch (item.effect.type) {
+      case 'heal':
+        const healAmount = item.effect.amount === 'max' ? 
+          (Number(player.hp) - Number(player.currentHp || 0)) : 
+          item.effect.amount;
+        
+        if ((player.currentHp || 0) < player.hp) {
+          player.currentHp = Math.min(Number(player.hp), Number(player.currentHp || 0) + healAmount);
+          logBattle(`Used ${item.name}! ${player.name} recovered ${healAmount} HP!`);
+          used = true;
+        } else {
+          logBattle(`${player.name} already has full HP!`);
+          return;
+        }
+        break;
+
+      case 'buff':
+        if (item.effect.stat && item.effect.amount) {
+          // Apply the buff
+          const buffStat = item.effect.stat;
+          const buffAmount = item.effect.amount;
+          
+          // Initialize buff storage
+          player.buffs = player.buffs || {};
+          player.originalStats = player.originalStats || {};
+          
+          // Store original stat if not already stored
+          if (!(buffStat in player.originalStats)) {
+            player.originalStats[buffStat] = player[buffStat] || 0;
+          }
+          
+          // Apply the buff
+          player[buffStat] = Number(player.originalStats[buffStat]) + buffAmount;
+          player.buffs[buffStat] = {
+            amount: buffAmount,
+            turnsLeft: item.effect.duration || 1
+          };
+          
+          logBattle(`Used ${item.name}! ${player.name}'s ${buffStat} increased by ${buffAmount}!`);
+          used = true;
+        }
+        break;
+
+      case 'xp':
+        // XP items can be used in battle and give immediate XP
+        if (player.id) {
+          const familiar = gameState.familiars.find(f => f.id === player.id);
+          if (familiar) {
+            familiar.xp = (familiar.xp || 0) + item.effect.amount;
+            logBattle(`${familiar.name} gained ${item.effect.amount} XP!`);
+            levelUpFamiliar(familiar);
+            used = true;
+          }
+        }
+        break;
     }
   }
 
@@ -170,6 +218,8 @@ function useItem(itemId) {
     // End turn
     battleState.turn = 'opponent';
     battleState.timeoutId = setTimeout(opponentTurn, 900);
+  } else {
+    logBattle(`Cannot use ${item.name} at this time.`);
   }
 }
 
@@ -234,6 +284,19 @@ function opponentTurn() {
     return;
   }
 
+  // Update buff durations
+  if (player.buffs) {
+    Object.keys(player.buffs).forEach(stat => {
+      player.buffs[stat].turnsLeft--;
+      if (player.buffs[stat].turnsLeft <= 0) {
+        // Remove the buff
+        player[stat] = player.originalStats[stat];
+        delete player.buffs[stat];
+        logBattle(`${player.name}'s ${stat} buff wore off!`);
+      }
+    });
+  }
+
   playSound('sounds/attack.ogg');
   const damage = calculateDamage(opponent, player);
   player.currentHp = Math.max(0, player.currentHp - damage);
@@ -241,7 +304,7 @@ function opponentTurn() {
   const playerEl = document.getElementById('player-familiar');
   if (playerEl) {
     playerEl.classList.add('hit', 'shake');
-  showSlash(playerEl);
+    showSlash(playerEl);
     setTimeout(() => playerEl.classList.remove('hit', 'shake'), 500);
   }
 
@@ -251,11 +314,25 @@ function opponentTurn() {
 }
 
 function calculateDamage(attacker, defender) {
-  const atk = Number(attacker?.attack) || 0;
+  if (!attacker || !defender) return 1;
+
+  let atk = Number(attacker?.attack) || 0;
   let def = Number(defender?.defense) || 0;
+
+  // Apply buffs if the attacker has any
+  if (attacker?.buffs?.attack) {
+    atk += attacker.buffs.attack.amount;
+  }
+
+  // Apply buffs if the defender has any
+  if (defender?.buffs?.defense) {
+    def += defender.buffs.defense.amount;
+  }
+
   if (defender && defender.isDefending) {
     def *= 1.5;
   }
+  
   const raw = atk - def;
   const damage = Math.max(1, Math.round(raw || 1));
   return damage;

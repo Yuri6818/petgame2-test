@@ -40,14 +40,14 @@ body {
 }
 
 /* Section Specific Backgrounds */
-body.home { background-image: url('img/assets/home.jpg'); }
-body.familiars { background-image: url('img/assets/pets.jpg'); }
-body.inventory { background-image: url('img/assets/inventory.jpg'); }
-body.shop { background-image: url('img/assets/shop.jpg'); }
+body.home { background-image: url('img/assets/home.png'); }
+body.familiars { background-image: url('img/assets/pets.png'); }
+body.inventory { background-image: url('img/assets/inventory.png'); }
+body.shop { background-image: url('img/assets/shop.png'); }
 body.activities { background-image: url('img/assets/activities.jpg'); }
-body.battle { background-image: url('img/assets/training-field.png'); }
-body.adopt { background-image: url('img/assets/adopt.jpg'); }
-body.pound { background-image: url('img/assets/pound.jpg'); }
+body.battle { background-image: url('img/assets/battle.png'); }
+body.adopt { background-image: url('img/assets/adopt.png'); }
+body.pound { background-image: url('img/assets/pound.png'); }
 
 .container {
   max-width: 1200px;

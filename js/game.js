@@ -222,17 +222,24 @@ function levelUp() {
   }
 }
 
+function getRequiredXP(level) {
+  // Exponential XP requirement: 100 * 2^(level-1)
+  return Math.floor(100 * Math.pow(2, level - 1));
+}
+
 function levelUpFamiliar(familiar) {
-  if (familiar.xp >= 100) {
+  const requiredXP = getRequiredXP(familiar.level);
+  
+  if (familiar.xp >= requiredXP) {
     // Max level check
     if (familiar.level >= 100) {
-      familiar.xp = 100; // Cap XP at 100 for max level
+      familiar.xp = requiredXP; // Cap XP at the requirement for max level
       saveGame();
       return;
     }
 
     familiar.level++;
-    familiar.xp -= 100;
+    familiar.xp -= requiredXP;
     
     // Increase stats with caps
     familiar.hp = Math.min(500, familiar.hp + 10);  // Cap HP at 500
@@ -240,13 +247,13 @@ function levelUpFamiliar(familiar) {
     familiar.defense = Math.min(100, familiar.defense + 2);  // Cap defense at 100
     familiar.speed = Math.min(100, familiar.speed + 1);  // Cap speed at 100
     
-    showNotification(`${familiar.name} leveled up to level ${familiar.level}! 🎉\nStats increased: HP +10, Attack +2, Defense +2, Speed +1`);
+    showNotification(`${familiar.name} leveled up to level ${familiar.level}! 🎉\nStats increased: HP +10, Attack +2, Defense +2, Speed +1\nNext level requires ${getRequiredXP(familiar.level)} XP`);
     celebrate();
     renderFamiliars();
     saveGame();
     
     // Check if there's still excess XP for another level
-    if (familiar.xp >= 100) {
+    if (familiar.xp >= getRequiredXP(familiar.level)) {
       levelUpFamiliar(familiar); // Recursively level up if more XP available
     }
   }
@@ -442,7 +449,7 @@ function interactFamiliar(familiarId, interactionType) {
   saveGame();
 }
 
-function useItem(itemId) {
+function useItem(itemId, targetFamiliarId) {
   const item = gameState.inventory.find(i => i.id === itemId);
   if (!item) return;
 
@@ -450,15 +457,43 @@ function useItem(itemId) {
     hatchEgg(itemId);
     return;
   }
-  
-  if (item.name && item.name.toLowerCase().includes('potion')) {
-    gameState.familiars.forEach(familiar => {
-      familiar.happiness = Math.min(100, (familiar.happiness || 0) + 20);
-    });
-    showNotification('All familiars feel refreshed!');
-  } else if (item.name && item.name.toLowerCase().includes('crystal')) {
-    gainXP(25);
-    showNotification('The crystal grants you wisdom! +25 XP');
+
+  // For items that need a target familiar
+  if (item.effect && (item.effect.type === 'heal' || item.effect.type === 'xp')) {
+    const familiar = targetFamiliarId ? 
+      gameState.familiars.find(f => f.id === targetFamiliarId) : 
+      gameState.familiars[0];
+
+    if (!familiar) {
+      showNotification('No familiar available to use this item on!');
+      return;
+    }
+
+    if (item.effect.type === 'heal') {
+      const healAmount = item.effect.amount === 'max' ? 
+        Number(familiar.hp) - Number(familiar.currentHp || 0) :
+        item.effect.amount;
+
+      if (familiar.currentHp === undefined) {
+        familiar.currentHp = Number(familiar.hp);
+      }
+
+      familiar.currentHp = Math.min(
+        Number(familiar.hp),
+        Number(familiar.currentHp) + healAmount
+      );
+
+      showNotification(`${familiar.name} recovered ${healAmount} HP!`);
+    } else if (item.effect.type === 'xp') {
+      familiar.xp = (familiar.xp || 0) + item.effect.amount;
+      showNotification(`${familiar.name} gained ${item.effect.amount} XP!`);
+      levelUpFamiliar(familiar);
+    }
+  } else if (item.effect && item.effect.type === 'buff') {
+    if (!item.effect.duration) {
+      showNotification('This item cannot be used outside of battle!');
+      return;
+    }
   }
   
   item.quantity--;
