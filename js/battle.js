@@ -110,19 +110,34 @@ function showItemMenu() {
   const itemMenu = document.getElementById('item-menu');
   const battleActions = document.getElementById('battle-actions');
   
-  // Get consumable items from inventory
-  const consumables = gameState.inventory.filter(item => 
-    item.type === 'consumable' && item.quantity > 0
-  );
+  // Get all usable items from inventory
+  const usableItems = gameState.inventory.filter(item => {
+    if (!item || item.quantity <= 0) return false;
+    
+    // Check if item has a valid effect
+    if (!item.effect) return false;
+    
+    // Allow healing items, battle buffs and XP items
+    return item.effect.type === 'heal' || 
+           (item.effect.type === 'buff' && item.effect.duration) ||
+           item.effect.type === 'xp';
+  });
   
-  // Render items
+  // Render items with descriptions
   const itemsContainer = itemMenu.querySelector('.battle-items');
-  itemsContainer.innerHTML = consumables.map(item => `
+  itemsContainer.innerHTML = usableItems.map(item => `
     <div class="battle-item" onclick="useItem(${item.id})">
-      <img src="${item.image}" alt="${item.name}" style="width: 40px; height: 40px;">
-      <span>${item.name} (${item.quantity})</span>
+      <img src="${item.image || 'img/assets/crate.png'}" alt="${item.name}" style="width: 40px; height: 40px;">
+      <div>
+        <span>${item.name} (${item.quantity})</span><br>
+        <small>${item.description || ''}</small>
+      </div>
     </div>
   `).join('');
+  
+  if (usableItems.length === 0) {
+    itemsContainer.innerHTML = '<p>No usable items in inventory!</p>';
+  }
   
   battleActions.style.display = 'none';
   itemMenu.style.display = 'block';
@@ -287,12 +302,19 @@ function opponentTurn() {
   // Update buff durations
   if (player.buffs) {
     Object.keys(player.buffs).forEach(stat => {
-      player.buffs[stat].turnsLeft--;
-      if (player.buffs[stat].turnsLeft <= 0) {
-        // Remove the buff
-        player[stat] = player.originalStats[stat];
-        delete player.buffs[stat];
-        logBattle(`${player.name}'s ${stat} buff wore off!`);
+      if (player.buffs[stat]) {
+        player.buffs[stat].turnsLeft--;
+        if (player.buffs[stat].turnsLeft <= 0) {
+          // Remove the buff
+          if (player.originalStats && player.originalStats[stat] !== undefined) {
+            player[stat] = player.originalStats[stat];
+            logBattle(`${player.name}'s ${stat} buff wore off!`);
+          }
+          delete player.buffs[stat];
+        } else {
+          // Log remaining duration if buff is still active
+          logBattle(`${player.name}'s ${stat} buff: ${player.buffs[stat].turnsLeft} turns remaining`);
+        }
       }
     });
   }

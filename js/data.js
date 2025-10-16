@@ -3,16 +3,20 @@
 
 // Centralized image paths
 const IMG_PATHS = {
-  inventory: "img/assets/inventory.jpg",
-  crystal: "img/assets/crystal.jpg",
-  sword: "img/assets/sword.jpg",
-  egg: "img/assets/egg.jpg",
-  star: "img/assets/star.jpg", // Fixed path to be in assets folder
-  healthPot: "img/assets/health pot.png",
-  shop: "img/assets/shop.jpg",
-  battle: "img/assets/battle.jpg",  // Used as enemy default
-  crate: "img/assets/crate.png",    // Used for mystery box
-  redClaws: "img/assets/red claws.png"  // Used for battle slash effect
+  inventory: "img/assets/inventory.png",
+  crystal: "img/assets/100xp-crystal.png",
+  sword: "img/assets/sword-magic.png",
+  egg: "img/assets/egg.png",
+  star: "img/assets/star.png",
+  healthPot: "img/assets/health-pot.png",
+  shop: "img/assets/shop.png",
+  battle: "img/assets/battle.png",
+  crate: "img/assets/crate.png",
+  redClaws: "img/assets/claws.png",
+  defenseCharm: "img/assets/defense-charm.png", // Fixed defense charm image path
+  greatHealth: "img/assets/great-health.png",    // Fixed great health potion path
+  xp500: "img/assets/500xp.png",                // Fixed 500 XP crystal path
+  expBoost: "img/assets/exp-boost.png"
 };
 
 // Image mappings for familiars and enemies - defined first since they're used in gameState
@@ -68,7 +72,7 @@ let gameState = {
   // Starting Battle Items
   { id: 101, name: "Health Potion", image: IMG_PATHS.healthPot, quantity: 3, type: 'consumable', description: 'Restores 20 HP to your familiar during battle.', effect: { type: "heal", amount: 20 } },
   { id: 102, name: "Magic Crystal", image: IMG_PATHS.crystal, quantity: 1, type: 'consumable', description: 'Instantly grants 100 XP to your familiar.', effect: { type: "xp", amount: 100 } },
-  { id: 103, name: "Defense Charm", image: IMG_PATHS.crystal, quantity: 1, type: 'consumable', description: 'Increases your familiar\'s defense by 8 for the next battle.', effect: { type: "buff", stat: "defense", amount: 8, duration: 1 } }
+  { id: 103, name: "Defense Charm", image: IMG_PATHS.defenseCharm, quantity: 1, type: 'consumable', description: 'Increases your familiar\'s defense by 8 for the next battle.', effect: { type: "buff", stat: "defense", amount: 8, duration: 1 } }
   ],
   activities: {
     foraging: { active: false, progress: 0 },
@@ -83,18 +87,18 @@ const shopItems = [
   // Battle Items
   { id: 201, name: "Health Potion", price: 20, currency: "coins", image: IMG_PATHS.healthPot, description: "Restores 20 HP to your familiar during battle.", type: "consumable", effect: { type: "heal", amount: 20 } },
   { id: 202, name: "Magic Sword", price: 100, currency: "coins", image: IMG_PATHS.sword, description: "Increases your familiar's attack by 10 for the next battle.", type: "consumable", effect: { type: "buff", stat: "attack", amount: 10, duration: 1 } },
-  { id: 203, name: "Defense Charm", price: 75, currency: "coins", image: IMG_PATHS.crystal, description: "Increases your familiar's defense by 8 for the next battle.", type: "consumable", effect: { type: "buff", stat: "defense", amount: 8, duration: 1 } },
+  { id: 203, name: "Defense Charm", price: 75, currency: "coins", image: IMG_PATHS.defenseCharm, description: "Increases your familiar's defense by 8 for the next battle.", type: "consumable", effect: { type: "buff", stat: "defense", amount: 8, duration: 1 } },
   
   // Enhancement Items
   { id: 204, name: "Magic Crystal", price: 50, currency: "coins", image: IMG_PATHS.crystal, description: "Instantly grants 100 XP to your familiar.", type: "consumable", effect: { type: "xp", amount: 100 } },
-  { id: 205, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.star, description: "Doubles XP gained in the next battle.", type: "consumable", effect: { type: "buff", stat: "xpGain", amount: 2, duration: 1 } },
+  { id: 205, name: "Experience Boost", price: 30, currency: "coins", image: IMG_PATHS.expBoost, description: "Doubles XP gained in the next battle.", type: "consumable", effect: { type: "buff", stat: "xpGain", amount: 2, duration: 1 } },
   
   // Special Items
   { id: 206, name: "Mystery Box", price: 5, currency: "dust", image: IMG_PATHS.crate, description: "Contains a random valuable item!", type: "consumable" },
   
   // Premium Items (cost dust)
-  { id: 207, name: "Super Health Potion", price: 10, currency: "dust", image: IMG_PATHS.healthPot, description: "Fully restores your familiar's HP!", type: "consumable", effect: { type: "heal", amount: "max" } },
-  { id: 208, name: "Power Crystal", price: 15, currency: "dust", image: IMG_PATHS.crystal, description: "Grants 500 XP to your familiar!", type: "consumable", effect: { type: "xp", amount: 500 } }
+  { id: 207, name: "Great Health Potion", price: 10, currency: "dust", image: IMG_PATHS.greatHealth, description: "Fully restores your familiar's HP!", type: "consumable", effect: { type: "heal", amount: "max" } },
+  { id: 208, name: "500 XP Crystal", price: 15, currency: "dust", image: IMG_PATHS.xp500, description: "Grants 500 XP to your familiar!", type: "consumable", effect: { type: "xp", amount: 500 } }
 ];
 
 // Expose image maps globally

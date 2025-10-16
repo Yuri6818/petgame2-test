@@ -449,6 +449,82 @@ function interactFamiliar(familiarId, interactionType) {
   saveGame();
 }
 
+function showFamiliarSelectionDialog(item, callback) {
+  // Create modal overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
+
+  // Create modal content
+  const dialog = document.createElement('div');
+  dialog.style.cssText = `
+    background: rgba(42, 14, 58, 0.95);
+    border: 2px solid #ffd700;
+    padding: 20px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    color: #fff;
+  `;
+
+  dialog.innerHTML = `
+    <h3>Select a familiar to use ${item.name} on:</h3>
+    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+      ${gameState.familiars.map(familiar => `
+        <div class="familiar-choice" style="
+          border: 1px solid #ffd700;
+          padding: 10px;
+          cursor: pointer;
+          text-align: center;
+          transition: all 0.3s ease;
+        " onclick="selectFamiliarForItem(${familiar.id}, ${item.id})">
+          <img src="${getImageSrc(familiar)}" style="width: 64px; height: 64px; border-radius: 50%;" alt="${familiar.name}">
+          <h4>${familiar.name}</h4>
+          <p>Level ${familiar.level} ${familiar.species}</p>
+        </div>
+      `).join('')}
+    </div>
+    <button onclick="closeFamiliarSelectionDialog()" style="
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #2a0e3a;
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      cursor: pointer;
+    ">Cancel</button>
+  `;
+
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+  window.familiarSelectionCallback = callback;
+  window.familiarSelectionDialog = overlay;
+}
+
+function closeFamiliarSelectionDialog() {
+  if (window.familiarSelectionDialog) {
+    window.familiarSelectionDialog.remove();
+    delete window.familiarSelectionDialog;
+    delete window.familiarSelectionCallback;
+  }
+}
+
+function selectFamiliarForItem(familiarId, itemId) {
+  if (window.familiarSelectionCallback) {
+    window.familiarSelectionCallback(familiarId);
+    closeFamiliarSelectionDialog();
+  }
+}
+
 function useItem(itemId, targetFamiliarId) {
   const item = gameState.inventory.find(i => i.id === itemId);
   if (!item) return;
@@ -458,52 +534,104 @@ function useItem(itemId, targetFamiliarId) {
     return;
   }
 
-  // For items that need a target familiar
-  if (item.effect && (item.effect.type === 'heal' || item.effect.type === 'xp')) {
-    const familiar = targetFamiliarId ? 
-      gameState.familiars.find(f => f.id === targetFamiliarId) : 
-      gameState.familiars[0];
+  // Check if we're in battle
+  const inBattle = window.battleState && battleState.playerFamiliar;
+  
+  // If we're not in battle and no target is specified, show familiar selection for certain items
+  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp')) {
+    showFamiliarSelectionDialog(item, (selectedFamiliarId) => {
+      useItem(itemId, selectedFamiliarId);
+    });
+    return;
+  }
 
-    if (!familiar) {
-      showNotification('No familiar available to use this item on!');
-      return;
-    }
+  const targetFamiliar = inBattle ? battleState.playerFamiliar : 
+    (targetFamiliarId ? gameState.familiars.find(f => f.id === targetFamiliarId) : gameState.familiars[0]);
 
-    if (item.effect.type === 'heal') {
-      const healAmount = item.effect.amount === 'max' ? 
-        Number(familiar.hp) - Number(familiar.currentHp || 0) :
-        item.effect.amount;
+  if (!targetFamiliar) {
+    showNotification('No familiar available to use this item on!');
+    return;
+  }
 
-      if (familiar.currentHp === undefined) {
-        familiar.currentHp = Number(familiar.hp);
-      }
+  let itemUsed = false;
 
-      familiar.currentHp = Math.min(
-        Number(familiar.hp),
-        Number(familiar.currentHp) + healAmount
-      );
+  if (item.effect) {
+    switch (item.effect.type) {
+      case 'heal':
+        // Healing can be used in or out of battle
+        const maxHp = Number(targetFamiliar.hp);
+        const currentHp = Number(targetFamiliar.currentHp || targetFamiliar.hp);
+        const healAmount = item.effect.amount === 'max' ? 
+          maxHp - currentHp : item.effect.amount;
 
-      showNotification(`${familiar.name} recovered ${healAmount} HP!`);
-    } else if (item.effect.type === 'xp') {
-      familiar.xp = (familiar.xp || 0) + item.effect.amount;
-      showNotification(`${familiar.name} gained ${item.effect.amount} XP!`);
-      levelUpFamiliar(familiar);
-    }
-  } else if (item.effect && item.effect.type === 'buff') {
-    if (!item.effect.duration) {
-      showNotification('This item cannot be used outside of battle!');
-      return;
+        if (currentHp < maxHp) {
+          targetFamiliar.currentHp = Math.min(maxHp, currentHp + healAmount);
+          showNotification(`${targetFamiliar.name} recovered ${healAmount} HP!`);
+          itemUsed = true;
+        } else {
+          showNotification(`${targetFamiliar.name} already has full HP!`);
+          return;
+        }
+        break;
+
+      case 'buff':
+        // Buffs can only be used in battle
+        if (!inBattle) {
+          showNotification('This item can only be used in battle!');
+          return;
+        }
+
+        if (!targetFamiliar.buffs) targetFamiliar.buffs = {};
+        if (!targetFamiliar.originalStats) targetFamiliar.originalStats = {};
+
+        const buffStat = item.effect.stat;
+        const buffAmount = item.effect.amount;
+
+        // Store original stat if not already stored
+        if (!(buffStat in targetFamiliar.originalStats)) {
+          targetFamiliar.originalStats[buffStat] = targetFamiliar[buffStat] || 0;
+        }
+
+        // Apply or refresh the buff
+        targetFamiliar[buffStat] = Number(targetFamiliar.originalStats[buffStat]) + buffAmount;
+        targetFamiliar.buffs[buffStat] = {
+          amount: buffAmount,
+          turnsLeft: item.effect.duration || 1
+        };
+
+        showNotification(`${targetFamiliar.name}'s ${buffStat} increased by ${buffAmount}!`);
+        itemUsed = true;
+        break;
+
+      case 'xp':
+        // XP items can be used anytime
+        if (targetFamiliar.id) {
+          const familiar = gameState.familiars.find(f => f.id === targetFamiliar.id);
+          if (familiar) {
+            familiar.xp = (familiar.xp || 0) + item.effect.amount;
+            showNotification(`${familiar.name} gained ${item.effect.amount} XP!`);
+            levelUpFamiliar(familiar);
+            itemUsed = true;
+          }
+        }
+        break;
     }
   }
-  
-  item.quantity--;
-  if (item.quantity <= 0) {
-    gameState.inventory = gameState.inventory.filter(i => i.id !== itemId);
+
+  if (itemUsed) {
+    item.quantity--;
+    if (item.quantity <= 0) {
+      gameState.inventory = gameState.inventory.filter(i => i.id !== itemId);
+    }
+
+    if (inBattle) {
+      renderBattle();
+    } else {
+      renderInventory();
+      renderFamiliars();
+    }
+    saveGame();
   }
-  
-  renderInventory();
-  renderFamiliars();
-  saveGame();
 }
 
 // Rename support (simple prompt + save)
