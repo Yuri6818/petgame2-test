@@ -227,7 +227,12 @@ function useItem(itemId) {
   if (used) {
     // Consume the item
     item.quantity--;
+    if (item.quantity <= 0) {
+      gameState.inventory = gameState.inventory.filter(i => i.id !== item.id);
+    }
     saveGame();
+    // Update inventory UI in case the player opened the item menu outside of battle
+    try { if (typeof renderInventory === 'function') renderInventory(); } catch (e) {}
     hideItemMenu();
     renderBattle();
     // End turn

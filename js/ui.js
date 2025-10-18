@@ -14,6 +14,18 @@ function updateUI() {
   if (dustCountEl) dustCountEl.textContent = gameState.dust ?? 0;
   if (playerLevelEl) playerLevelEl.textContent = gameState.level ?? 1;
   if (playerXPEl) playerXPEl.textContent = gameState.xp ?? 0;
+
+  // Update XP progress bar if present
+  const xpBar = document.getElementById('playerXPBar');
+  if (xpBar) {
+    // Use same XP formula as game.js getRequiredXP (100 * 2^(level-1))
+    const lvl = Number(gameState.level) || 1;
+    const req = Math.floor(100 * Math.pow(2, lvl - 1));
+    const xp = Number(gameState.xp) || 0;
+    const pct = Math.max(0, Math.min(100, Math.round((xp / req) * 100)));
+    xpBar.style.width = pct + '%';
+    xpBar.title = `${xp} / ${req} XP`;
+  }
   
   // Update active familiar display
   const activeFamiliarDisplay = document.getElementById('activeFamiliarDisplay');
@@ -110,9 +122,8 @@ function createImageElement(src, alt = '', className = '', onError = null) {
       onError(img);
     } else {
       // Default fallback behavior
-      const fallbackSrc = src.includes('familiars') ? 'img/familiars/familiars.png' : 
-                         src.includes('enemies') ? 'img/assets/battle.png' : 
-                         'img/assets/crate.png';
+      const fallbackSrc = src && src.toString().includes('familiars') ? 'img/familiars/familiars.png' : 
+                         (src && src.toString().includes('enemies') ? 'img/assets/battle.png' : 'img/assets/crate.png');
       img.src = fallbackSrc;
       img.onerror = null; // Prevent infinite loop
     }
@@ -157,6 +168,22 @@ function renderFamiliars() {
     const levelEl = document.createElement('p');
     levelEl.className = 'fam-level';
     levelEl.textContent = `Level ${fam.level || 1} ${fam.species ? '(' + fam.species + ')' : ''}`;
+    // Add per-familiar XP bar
+    try {
+      const reqXP = (typeof getRequiredXP === 'function') ? getRequiredXP(fam.level || 1) : (100 * Math.pow(2, (fam.level || 1) - 1));
+      const famXP = Number(fam.xp) || 0;
+      const pct = Math.max(0, Math.min(100, Math.round((famXP / reqXP) * 100)));
+
+      const xpContainer = document.createElement('div');
+      xpContainer.style.cssText = 'margin-top:8px;text-align:left;';
+      xpContainer.innerHTML = `
+        <div style="font-size:12px;color:#c8bda1;margin-bottom:4px;">XP: ${famXP} / ${reqXP}</div>
+        <div class="progress-bar" style="height:10px;">
+          <div class="progress-fill" style="width: ${pct}%; height:100%;"></div>
+        </div>
+      `;
+      levelEl.appendChild(xpContainer);
+    } catch (e) { /* ignore if function not available */ }
     div.appendChild(levelEl);
     
     // Add stats grid
@@ -226,9 +253,10 @@ function renderInventory() {
   if (!container) return;
   container.innerHTML = '';
   const inv = gameState.inventory || [];
-  if (!inv.length) { container.innerHTML = '<p>Your inventory is empty.</p>'; return; }
+  const visibleInv = (inv || []).filter(i => (i.quantity || 0) > 0);
+  if (!visibleInv.length) { container.innerHTML = '<p>Your inventory is empty.</p>'; return; }
 
-  inv.forEach(item => {
+  visibleInv.forEach(item => {
     console.log("Rendering inventory item with image:", item.image);
     const div = document.createElement('div');
     div.className = 'card item-card';
@@ -383,10 +411,12 @@ function showSlash(targetEl, imagePath = IMG_PATHS.redClaws) {
   const img = document.createElement('img');
   img.src = imagePath;
   img.className = 'slash-effect';
+  // position the slash centrally within the target and give it a modest size
   img.style.position = 'absolute';
-  img.style.left = '10%';
-  img.style.top = '5%';
-  img.style.width = '220px';
+  img.style.left = '50%';
+  img.style.top = '50%';
+  img.style.transform = 'translate(-50%, -50%)';
+  img.style.width = '120px';
   img.style.pointerEvents = 'none';
   targetEl.appendChild(img);
   setTimeout(() => img.remove(), 420);
