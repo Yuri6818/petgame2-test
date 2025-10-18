@@ -57,15 +57,16 @@ let gameState = {
   level: 1,
   xp: 0,
   lastDaily: null,
+  activeFamiliarId: null, // Track which familiar is currently active
   familiars: [
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
-  { id: 1, name: "Unicorn", species: "unicorn", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/unicorn.png", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 10, speed: 25 },
-  { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/familiars/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10 },
-  { id: 3, name: "Ursina", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13 },
-  { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15 },
-  { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20 },
-  { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 13, defense: 11, speed: 22 },
-  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 11, speed: 30 }
+  { id: 1, name: "Unicorn", species: "unicorn", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/unicorn.png", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 10, speed: 25, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 2, name: "Silver Dragon", species: "dragon", color: "silver", marking: "runic", level: 8, xp: 0, image: "img/familiars/dragon.png", hunger: 70, thirst: 60, happiness: 80, hp: 120, attack: 25, defense: 15, speed: 10, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 3, name: "Ursina", species: "bear", color: "brown", marking: "striped", level: 6, xp: 0, image: "img/familiars/ursina.png", hunger: 80, thirst: 70, happiness: 85, hp: 110, attack: 22, defense: 14, speed: 13, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 13, defense: 11, speed: 22, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 11, speed: 30, library: [], collectibles: { stamps: [], toys: [], plants: [] } }
   ],
   pound: [],
   inventory: [
@@ -98,7 +99,17 @@ const shopItems = [
   
   // Premium Items (cost dust)
   { id: 207, name: "Great Health Potion", price: 10, currency: "dust", image: IMG_PATHS.greatHealth, description: "Fully restores your familiar's HP!", type: "consumable", effect: { type: "heal", amount: "max" } },
-  { id: 208, name: "500 XP Crystal", price: 15, currency: "dust", image: IMG_PATHS.xp500, description: "Grants 500 XP to your familiar!", type: "consumable", effect: { type: "xp", amount: 500 } }
+  { id: 208, name: "500 XP Crystal", price: 15, currency: "dust", image: IMG_PATHS.xp500, description: "Grants 500 XP to your familiar!", type: "consumable", effect: { type: "xp", amount: 500 } },
+  
+  // Books (collectible items)
+  { id: 301, name: "Ancient Tome of Wisdom", price: 25, currency: "coins", image: IMG_PATHS.crate, description: "A mysterious book that grants wisdom to your familiar.", type: "book", effect: { type: "book", title: "Ancient Tome of Wisdom", description: "Your familiar gains wisdom from this ancient text." } },
+  { id: 302, name: "Dragon's Diary", price: 30, currency: "coins", image: IMG_PATHS.crate, description: "The personal journal of an ancient dragon.", type: "book", effect: { type: "book", title: "Dragon's Diary", description: "Your familiar learns about dragon history." } },
+  { id: 303, name: "Magic Spellbook", price: 35, currency: "coins", image: IMG_PATHS.crate, description: "A book containing magical knowledge.", type: "book", effect: { type: "book", title: "Magic Spellbook", description: "Your familiar discovers magical secrets." } },
+  
+  // Collectible Items
+  { id: 401, name: "Golden Stamp", price: 20, currency: "coins", image: IMG_PATHS.crate, description: "A beautiful golden stamp for your familiar's collection.", type: "stamp", effect: { type: "collectible", category: "stamp", name: "Golden Stamp", description: "A rare golden stamp." } },
+  { id: 402, name: "Magic Toy Ball", price: 15, currency: "coins", image: IMG_PATHS.crate, description: "A magical toy that brings joy to familiars.", type: "toy", effect: { type: "collectible", category: "toy", name: "Magic Toy Ball", description: "A glowing ball that never stops bouncing." } },
+  { id: 403, name: "Moonlight Flower", price: 18, currency: "coins", image: IMG_PATHS.crate, description: "A rare flower that glows in moonlight.", type: "plant", effect: { type: "collectible", category: "plant", name: "Moonlight Flower", description: "A delicate flower that emits soft moonlight." } }
 ];
 
 // Expose image maps globally

@@ -14,6 +14,17 @@ function updateUI() {
   if (dustCountEl) dustCountEl.textContent = gameState.dust ?? 0;
   if (playerLevelEl) playerLevelEl.textContent = gameState.level ?? 1;
   if (playerXPEl) playerXPEl.textContent = gameState.xp ?? 0;
+  
+  // Update active familiar display
+  const activeFamiliarDisplay = document.getElementById('activeFamiliarDisplay');
+  if (activeFamiliarDisplay) {
+    const activeFamiliar = getActiveFamiliar();
+    if (activeFamiliar) {
+      activeFamiliarDisplay.textContent = `Active: ${activeFamiliar.name}`;
+    } else {
+      activeFamiliarDisplay.textContent = 'Active: None';
+    }
+  }
 }
 
 function updateServerTime() {
@@ -174,11 +185,36 @@ function renderFamiliars() {
     
     const actionsDiv2 = document.createElement('div');
     actionsDiv2.className = 'familiar-actions';
+    
+    // Check if this is the active familiar
+    const isActive = gameState.activeFamiliarId === fam.id;
+    const activeText = isActive ? '⭐ Active Pet' : 'Set Active';
+    
     actionsDiv2.innerHTML = `
+      <button class="btn" onclick="setActiveFamiliar(${fam.id})">${activeText}</button>
       <button class="btn" onclick="renameFamiliar(${fam.id})">Rename</button>
       <button class="btn" onclick="sendToPound(${fam.id})">Send to Pound</button>
     `;
     div.appendChild(actionsDiv2);
+    
+    // Add visual indicator for active familiar
+    if (isActive) {
+      div.style.border = '3px solid #ffd700';
+      div.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.5)';
+    }
+    
+    // Add library and collection info
+    const libraryCount = fam.library ? fam.library.length : 0;
+    const stampCount = fam.collectibles ? fam.collectibles.stamps.length : 0;
+    const toyCount = fam.collectibles ? fam.collectibles.toys.length : 0;
+    const plantCount = fam.collectibles ? fam.collectibles.plants.length : 0;
+    
+    const collectionDiv = document.createElement('div');
+    collectionDiv.style.cssText = 'margin-top: 10px; font-size: 12px; color: #c8bda1;';
+    collectionDiv.innerHTML = `
+      📚 Books: ${libraryCount} | 🎫 Stamps: ${stampCount} | 🧸 Toys: ${toyCount} | 🌸 Plants: ${plantCount}
+    `;
+    div.appendChild(collectionDiv);
 
     container.appendChild(div);
   });

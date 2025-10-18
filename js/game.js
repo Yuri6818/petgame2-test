@@ -313,6 +313,48 @@ function startForaging() { startActivity('foraging'); }
 function startMining() { startActivity('mining'); }
 function startFishing() { startActivity('fishing'); }
 
+// Card Game Mini-Game
+function startCardGame() {
+  const activeFamiliar = getActiveFamiliar();
+  if (!activeFamiliar) {
+    showNotification('You need an active familiar to play!');
+    return;
+  }
+  
+  // Simple card game - guess higher or lower
+  const cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  const cardValues = { 'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13 };
+  
+  const firstCard = cards[Math.floor(Math.random() * cards.length)];
+  const secondCard = cards[Math.floor(Math.random() * cards.length)];
+  
+  const firstValue = cardValues[firstCard];
+  const secondValue = cardValues[secondCard];
+  
+  let result = '';
+  let reward = { coins: 0, dust: 0, xp: 0 };
+  
+  if (secondValue > firstValue) {
+    result = `You drew ${firstCard} then ${secondCard}. Higher! You win!`;
+    reward = { coins: 20, dust: 2, xp: 15 };
+  } else if (secondValue < firstValue) {
+    result = `You drew ${firstCard} then ${secondCard}. Lower! You win!`;
+    reward = { coins: 20, dust: 2, xp: 15 };
+  } else {
+    result = `You drew ${firstCard} then ${secondCard}. Same value! Draw!`;
+    reward = { coins: 10, dust: 1, xp: 8 };
+  }
+  
+  // Apply rewards
+  gameState.coins += reward.coins;
+  gameState.dust += reward.dust;
+  gainXP(reward.xp);
+  
+  showNotification(`${result} +${reward.coins} coins, +${reward.dust} dust, +${reward.xp} XP`);
+  updateUI();
+  saveGame();
+}
+
 function completeActivity(activityName) {
   const activity = gameState.activities[activityName];
   activity.active = false;
@@ -548,7 +590,7 @@ function useItem(itemId, targetFamiliarId) {
   const inBattle = window.battleState && battleState.playerFamiliar;
   
   // If we're not in battle and no target is specified, show familiar selection for certain items
-  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp')) {
+  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible')) {
     showFamiliarSelectionDialog(item, (selectedFamiliarId) => {
       useItem(itemId, selectedFamiliarId);
     });
@@ -625,6 +667,66 @@ function useItem(itemId, targetFamiliarId) {
           }
         }
         break;
+
+      case 'book':
+        // Books can only be used on active familiar and are collectible
+        if (!inBattle && targetFamiliar.id) {
+          const familiar = gameState.familiars.find(f => f.id === targetFamiliar.id);
+          if (familiar) {
+            // Check if book already read
+            const alreadyRead = familiar.library.some(book => book.title === item.effect.title);
+            if (alreadyRead) {
+              showNotification(`${familiar.name} has already read this book!`);
+              return;
+            }
+            
+            // Add to library
+            familiar.library.push({
+              title: item.effect.title,
+              description: item.effect.description,
+              dateRead: new Date().toLocaleDateString()
+            });
+            
+            // Increase happiness
+            familiar.happiness = Math.min(100, (familiar.happiness || 0) + 10);
+            familiar.hunger = Math.max(0, (familiar.hunger || 0) - 5);
+            
+            showNotification(`${familiar.name} read "${item.effect.title}" and gained wisdom!`);
+            itemUsed = true;
+          }
+        }
+        break;
+
+      case 'collectible':
+        // Collectibles can only be used on active familiar
+        if (!inBattle && targetFamiliar.id) {
+          const familiar = gameState.familiars.find(f => f.id === targetFamiliar.id);
+          if (familiar) {
+            const category = item.effect.category;
+            const collectibleName = item.effect.name;
+            
+            // Check if already collected
+            const alreadyCollected = familiar.collectibles[category].some(item => item.name === collectibleName);
+            if (alreadyCollected) {
+              showNotification(`${familiar.name} already has this ${category}!`);
+              return;
+            }
+            
+            // Add to collection
+            familiar.collectibles[category].push({
+              name: collectibleName,
+              description: item.effect.description,
+              dateCollected: new Date().toLocaleDateString()
+            });
+            
+            // Increase happiness
+            familiar.happiness = Math.min(100, (familiar.happiness || 0) + 15);
+            
+            showNotification(`${familiar.name} collected "${collectibleName}" and is very happy!`);
+            itemUsed = true;
+          }
+        }
+        break;
     }
   }
 
@@ -654,6 +756,29 @@ function renameFamiliar(id) {
     renderFamiliars();
     saveGame();
   }
+}
+
+// Active Pet System - Simple functions
+function setActiveFamiliar(familiarId) {
+  const familiar = gameState.familiars.find(f => f.id === familiarId);
+  if (!familiar) {
+    showNotification('Familiar not found!');
+    return false;
+  }
+  
+  gameState.activeFamiliarId = familiarId;
+  showNotification(`${familiar.name} is now your active familiar!`);
+  updateUI();
+  saveGame();
+  return true;
+}
+
+function getActiveFamiliar() {
+  if (!gameState.activeFamiliarId && gameState.familiars.length > 0) {
+    gameState.activeFamiliarId = gameState.familiars[0].id;
+    saveGame();
+  }
+  return gameState.familiars.find(f => f.id === gameState.activeFamiliarId);
 }
 
 // Familiar animation function
