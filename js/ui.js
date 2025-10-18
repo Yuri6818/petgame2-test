@@ -85,6 +85,31 @@ function getImageSrc(item, fallbackType = 'familiar') {
   return (fallbackType === 'enemy' ? enemyImages.default : familiarImages.default);
 }
 
+// Enhanced image loading with better error handling
+function createImageElement(src, alt = '', className = '', onError = null) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = alt;
+  if (className) img.className = className;
+  
+  // Enhanced error handling
+  img.onerror = function() {
+    console.warn(`Failed to load image: ${src}`);
+    if (onError) {
+      onError(img);
+    } else {
+      // Default fallback behavior
+      const fallbackSrc = src.includes('familiars') ? 'img/familiars/familiars.png' : 
+                         src.includes('enemies') ? 'img/assets/battle.png' : 
+                         'img/assets/crate.png';
+      img.src = fallbackSrc;
+      img.onerror = null; // Prevent infinite loop
+    }
+  };
+  
+  return img;
+}
+
 /* ---------- Render familiars (clean layout, rename support) ---------- */
 function renderFamiliars() {
   const container = document.getElementById('familiarContainer');
@@ -101,35 +126,59 @@ function renderFamiliars() {
     div.dataset.familiarId = fam.id;
 
     // Stats layout: left = needs, right = core stats
-    div.innerHTML = `
-      <div class="card-image">
-        <img src="${imgSrc}" alt="${fam.name}" class="familiar-thumb"
-             onerror="this.onerror=null;this.src='${placeholder}'">
-      </div>
-      <h3 class="fam-name">${fam.name || 'Unnamed'}</h3>
-      <p class="fam-level">Level ${fam.level || 1} ${fam.species ? '(' + fam.species + ')' : ''}</p>
-
-      <div class="fam-stats-grid">
-        <div class="stat"><span>❤️</span> <span>${fam.happiness ?? 0}%</span></div>
-        <div class="stat"><span>⚔️</span> <span>${fam.attack ?? 0}</span></div>
-        <div class="stat"><span>🍖</span> <span>${fam.hunger ?? 0}%</span></div>
-        <div class="stat"><span>🛡️</span> <span>${fam.defense ?? 0}</span></div>
-        <div class="stat"><span>💧</span> <span>${fam.thirst ?? 0}%</span></div>
-        <div class="stat"><span>⚡</span> <span>${fam.speed ?? 0}</span></div>
-      </div>
-
-      <div class="familiar-actions">
-        <button class="btn" onclick="interactFamiliar(${fam.id}, 'play')">Play</button>
-        <button class="btn" onclick="interactFamiliar(${fam.id}, 'feed')">Feed</button>
-        <button class="btn" onclick="interactFamiliar(${fam.id}, 'water')">Water</button>
-        <button class="btn btn-primary" onclick="startBattle(${fam.id})">Battle</button>
-      </div>
-
-      <div class="familiar-actions">
-        <button class="btn" onclick="renameFamiliar(${fam.id})">Rename</button>
-        <button class="btn" onclick="sendToPound(${fam.id})">Send to Pound</button>
-      </div>
+    const cardImageDiv = document.createElement('div');
+    cardImageDiv.className = 'card-image';
+    
+    const img = createImageElement(imgSrc, fam.name, 'familiar-thumb', (errorImg) => {
+      errorImg.src = placeholder;
+    });
+    
+    cardImageDiv.appendChild(img);
+    
+    div.appendChild(cardImageDiv);
+    
+    // Add name and level
+    const nameEl = document.createElement('h3');
+    nameEl.className = 'fam-name';
+    nameEl.textContent = fam.name || 'Unnamed';
+    div.appendChild(nameEl);
+    
+    const levelEl = document.createElement('p');
+    levelEl.className = 'fam-level';
+    levelEl.textContent = `Level ${fam.level || 1} ${fam.species ? '(' + fam.species + ')' : ''}`;
+    div.appendChild(levelEl);
+    
+    // Add stats grid
+    const statsGrid = document.createElement('div');
+    statsGrid.className = 'fam-stats-grid';
+    statsGrid.innerHTML = `
+      <div class="stat"><span>❤️</span> <span>${fam.happiness ?? 0}%</span></div>
+      <div class="stat"><span>⚔️</span> <span>${fam.attack ?? 0}</span></div>
+      <div class="stat"><span>🍖</span> <span>${fam.hunger ?? 0}%</span></div>
+      <div class="stat"><span>🛡️</span> <span>${fam.defense ?? 0}</span></div>
+      <div class="stat"><span>💧</span> <span>${fam.thirst ?? 0}%</span></div>
+      <div class="stat"><span>⚡</span> <span>${fam.speed ?? 0}</span></div>
     `;
+    div.appendChild(statsGrid);
+    
+    // Add action buttons
+    const actionsDiv1 = document.createElement('div');
+    actionsDiv1.className = 'familiar-actions';
+    actionsDiv1.innerHTML = `
+      <button class="btn" onclick="interactFamiliar(${fam.id}, 'play')">Play</button>
+      <button class="btn" onclick="interactFamiliar(${fam.id}, 'feed')">Feed</button>
+      <button class="btn" onclick="interactFamiliar(${fam.id}, 'water')">Water</button>
+      <button class="btn btn-primary" onclick="startBattle(${fam.id})">Battle</button>
+    `;
+    div.appendChild(actionsDiv1);
+    
+    const actionsDiv2 = document.createElement('div');
+    actionsDiv2.className = 'familiar-actions';
+    actionsDiv2.innerHTML = `
+      <button class="btn" onclick="renameFamiliar(${fam.id})">Rename</button>
+      <button class="btn" onclick="sendToPound(${fam.id})">Send to Pound</button>
+    `;
+    div.appendChild(actionsDiv2);
 
     container.appendChild(div);
   });
@@ -147,15 +196,41 @@ function renderInventory() {
     console.log("Rendering inventory item with image:", item.image);
     const div = document.createElement('div');
     div.className = 'card item-card';
-  const img = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:64px;height:64px;" onerror="this.onerror=null;this.src='${IMG_PATHS.shop}'">` : '';
-    let btnHtml = item.type === 'egg' ? `<button class="btn" onclick="hatchEgg(${item.id})">Hatch</button>` : `<button class="btn" onclick="useItem(${item.id})">Use</button>`;
-    div.innerHTML = `
-      <div class="card-image">${img}</div>
-      <h3>${item.name}</h3>
-      <p>${item.description || ''}</p>
-      <p>Qty: ${item.quantity || 0}</p>
-      ${btnHtml}
-    `;
+    
+    const cardImageDiv = document.createElement('div');
+    cardImageDiv.className = 'card-image';
+    
+    if (item.image) {
+      const img = createImageElement(item.image, item.name, '', (errorImg) => {
+        errorImg.src = IMG_PATHS.shop;
+      });
+      img.style.width = '64px';
+      img.style.height = '64px';
+      cardImageDiv.appendChild(img);
+    }
+    
+    div.appendChild(cardImageDiv);
+    
+    const nameEl = document.createElement('h3');
+    nameEl.textContent = item.name;
+    div.appendChild(nameEl);
+    
+    if (item.description) {
+      const descEl = document.createElement('p');
+      descEl.textContent = item.description;
+      div.appendChild(descEl);
+    }
+    
+    const qtyEl = document.createElement('p');
+    qtyEl.textContent = `Qty: ${item.quantity || 0}`;
+    div.appendChild(qtyEl);
+    
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = item.type === 'egg' ? 'Hatch' : 'Use';
+    btn.onclick = () => item.type === 'egg' ? hatchEgg(item.id) : useItem(item.id);
+    div.appendChild(btn);
+    
     container.appendChild(div);
   });
 }
@@ -168,14 +243,44 @@ function renderShop() {
     const div = document.createElement('div');
     div.className = 'card shop-card';
     const canAfford = (gameState[item.currency] || 0) >= item.price;
-  const imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" style="width:100px;height:100px;border-radius:12px;" onerror="this.onerror=null;this.src='${IMG_PATHS.shop}'">` : '';
-    div.innerHTML = `
-      <div class="card-image">${imgHtml}</div>
-      <h3>${item.name}</h3>
-      <p>${item.description || ''}</p>
-      <div class="price"><strong>${item.currency === 'coins' ? 'Coins' : 'Dust'}:</strong> ${item.price}</div>
-      <button class="btn" ${!canAfford ? 'disabled' : ''} onclick="buyItem(${item.id})">Buy</button>
-    `;
+    
+    const cardImageDiv = document.createElement('div');
+    cardImageDiv.className = 'card-image';
+    
+    if (item.image) {
+      const img = createImageElement(item.image, item.name, '', (errorImg) => {
+        errorImg.src = IMG_PATHS.shop;
+      });
+      img.style.width = '100px';
+      img.style.height = '100px';
+      img.style.borderRadius = '12px';
+      cardImageDiv.appendChild(img);
+    }
+    
+    div.appendChild(cardImageDiv);
+    
+    const nameEl = document.createElement('h3');
+    nameEl.textContent = item.name;
+    div.appendChild(nameEl);
+    
+    if (item.description) {
+      const descEl = document.createElement('p');
+      descEl.textContent = item.description;
+      div.appendChild(descEl);
+    }
+    
+    const priceEl = document.createElement('div');
+    priceEl.className = 'price';
+    priceEl.innerHTML = `<strong>${item.currency === 'coins' ? 'Coins' : 'Dust'}:</strong> ${item.price}`;
+    div.appendChild(priceEl);
+    
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = 'Buy';
+    btn.disabled = !canAfford;
+    btn.onclick = () => buyItem(item.id);
+    div.appendChild(btn);
+    
     container.appendChild(div);
   });
 }

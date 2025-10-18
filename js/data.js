@@ -12,10 +12,10 @@ const IMG_PATHS = {
   shop: "img/assets/shop.png",
   battle: "img/assets/battle.png",
   crate: "img/assets/crate.png",
-  redClaws: "img/assets/claws.png",
-  defenseCharm: "img/assets/defense-charm.png", // Fixed defense charm image path
-  greatHealth: "img/assets/great-health.png",    // Fixed great health potion path
-  xp500: "img/assets/500xp.png",                // Fixed 500 XP crystal path
+  redClaws: "img/assets/red claws.png",
+  defenseCharm: "img/assets/def-charm.png",
+  greatHealth: "img/assets/greater-healing.png",
+  xp500: "img/assets/500xp.png",
   expBoost: "img/assets/exp-boost.png"
 };
 

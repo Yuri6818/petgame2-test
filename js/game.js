@@ -62,51 +62,61 @@ function claimDaily() {
 }
 
 function buyItem(itemId) {
-  const item = shopItems.find(i => i.id === itemId);
-  if (!item) return showNotification('Item not found');
-  const cost = item.price;
-  const currency = item.currency;
+  try {
+    const item = shopItems.find(i => i.id === itemId);
+    if (!item) {
+      showNotification('Item not found');
+      return;
+    }
+    
+    const cost = item.price;
+    const currency = item.currency;
 
-  if (gameState[currency] < cost) {
-    showNotification(`Not enough ${currency}!`);
-    return;
-  }
-
-  const confirmation = confirm(`Are you sure you want to buy ${item.name} for ${cost} ${currency}?`);
-
-  if (confirmation) {
-    gameState[currency] -= cost;
-
-    if (item.name === 'Mystery Box') {
-      buyMysteryBox();
-    } else if (item.type === 'familiar') {
-      const newFamiliar = createFamiliarFromItem(item, Date.now() + Math.floor(Math.random() * 1000));
-      gameState.familiars.push(newFamiliar);
-      renderFamiliars();
-      showNotification(`You bought a new familiar: ${item.name}!`);
-      celebrate();
-    } else {
-      // Add to inventory
-      const existingItem = gameState.inventory.find(i => i.name === item.name);
-      if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 0) + 1;
-      } else {
-        gameState.inventory.push({
-          id: Date.now() + Math.floor(Math.random() * 1000),
-          name: item.name,
-          image: item.image,
-          quantity: 1,
-          type: item.type || 'consumable',
-          description: item.description || ''
-        });
-      }
-      renderInventory();
-      showNotification(`Purchased ${item.name}!`);
+    if (gameState[currency] < cost) {
+      showNotification(`Not enough ${currency}!`);
+      return;
     }
 
-    spawnOrb(currency === 'coins' ? coinCountEl : dustCountEl);
-    updateUI();
-    saveGame();
+    const confirmation = confirm(`Are you sure you want to buy ${item.name} for ${cost} ${currency}?`);
+
+    if (confirmation) {
+      gameState[currency] -= cost;
+
+      if (item.name === 'Mystery Box') {
+        buyMysteryBox();
+      } else if (item.type === 'familiar') {
+        const newFamiliar = createFamiliarFromItem(item, Date.now() + Math.floor(Math.random() * 1000));
+        gameState.familiars.push(newFamiliar);
+        renderFamiliars();
+        showNotification(`You bought a new familiar: ${item.name}!`);
+        celebrate();
+      } else {
+        // Add to inventory
+        const existingItem = gameState.inventory.find(i => i.name === item.name);
+        if (existingItem) {
+          existingItem.quantity = (existingItem.quantity || 0) + 1;
+        } else {
+          gameState.inventory.push({
+            id: Date.now() + Math.floor(Math.random() * 1000),
+            name: item.name,
+            image: item.image,
+            quantity: 1,
+            type: item.type || 'consumable',
+            description: item.description || '',
+            effect: item.effect || null
+          });
+        }
+        renderInventory();
+        showNotification(`Purchased ${item.name}!`);
+      }
+
+      spawnOrb(currency === 'coins' ? coinCountEl : dustCountEl);
+      updateUI();
+      saveGame();
+    }
+  } catch (error) {
+    console.error('Error in buyItem:', error);
+    showNotification('An error occurred while purchasing the item.');
   }
 }
 
@@ -643,5 +653,17 @@ function renameFamiliar(id) {
     fam.name = name.trim();
     renderFamiliars();
     saveGame();
+  }
+}
+
+// Familiar animation function
+function familiarAnimation(familiarId) {
+  const familiarCard = document.querySelector(`[data-familiar-id="${familiarId}"]`);
+  if (familiarCard) {
+    familiarCard.style.transform = 'scale(1.1)';
+    familiarCard.style.transition = 'transform 0.3s ease';
+    setTimeout(() => {
+      familiarCard.style.transform = 'scale(1)';
+    }, 300);
   }
 }
