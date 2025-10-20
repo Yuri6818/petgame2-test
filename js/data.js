@@ -16,7 +16,13 @@ const IMG_PATHS = {
   defenseCharm: "img/assets/def-charm.png",
   greatHealth: "img/assets/greater-healing.png",
   xp500: "img/assets/500xp.png",
-  expBoost: "img/assets/exp-boost.png"
+  expBoost: "img/assets/exp-boost.png",
+  ancientTome: "img/assets/ancient-tome-of-wisdom.png",
+  dragonsDiary: "img/assets/dragons-diary.png",
+  magicSpellbook: "img/assets/magic-spellbook.png",
+  goldenStamp: "img/assets/golden-stamp.png",
+  magicToyBall: "img/assets/magic-toy-ball.png",
+  moonlightFlower: "img/assets/moonlight-flower.png"
 };
 
 // Image mappings for familiars and enemies - defined first since they're used in gameState
@@ -103,14 +109,14 @@ const shopItems = [
   { id: 208, name: "500 XP Crystal", price: 15, currency: "dust", image: IMG_PATHS.xp500, description: "Grants 500 XP to your familiar!", type: "consumable", effect: { type: "xp", amount: 500 } },
   
   // Books (collectible items)
-  { id: 301, name: "Ancient Tome of Wisdom", price: 25, currency: "coins", image: "img/assets/ancient-tome-of-wisdom.png", description: "A mysterious book that grants wisdom to your familiar.", type: "book", effect: { type: "book", title: "Ancient Tome of Wisdom", description: "Your familiar gains wisdom from this ancient text." } },
-  { id: 302, name: "Dragon's Diary", price: 30, currency: "coins", image: "img/assets/dragons-diary.png", description: "The personal journal of an ancient dragon.", type: "book", effect: { type: "book", title: "Dragon's Diary", description: "Your familiar learns about dragon history." } },
-  { id: 303, name: "Magic Spellbook", price: 35, currency: "coins", image: "img/assets/magic-spellbook.png", description: "A book containing magical knowledge.", type: "book", effect: { type: "book", title: "Magic Spellbook", description: "Your familiar discovers magical secrets." } },
+  { id: 301, name: "Ancient Tome of Wisdom", price: 25, currency: "coins", image: IMG_PATHS.ancientTome, description: "A mysterious book that grants wisdom to your familiar.", type: "book", effect: { type: "book", title: "Ancient Tome of Wisdom", description: "Your familiar gains wisdom from this ancient text." } },
+  { id: 302, name: "Dragon's Diary", price: 30, currency: "coins", image: IMG_PATHS.dragonsDiary, description: "The personal journal of an ancient dragon.", type: "book", effect: { type: "book", title: "Dragon's Diary", description: "Your familiar learns about dragon history." } },
+  { id: 303, name: "Magic Spellbook", price: 35, currency: "coins", image: IMG_PATHS.magicSpellbook, description: "A book containing magical knowledge.", type: "book", effect: { type: "book", title: "Magic Spellbook", description: "Your familiar discovers magical secrets." } },
   
   // Collectible Items
-  { id: 401, name: "Golden Stamp", price: 20, currency: "coins", image: "img/assets/golden-stamp.png", description: "A beautiful golden stamp for your familiar's collection.", type: "stamp", effect: { type: "collectible", category: "stamp", name: "Golden Stamp", description: "A rare golden stamp." } },
-  { id: 402, name: "Magic Toy Ball", price: 15, currency: "coins", image: "img/assets/magic-toy-ball.png", description: "A magical toy that brings joy to familiars.", type: "toy", effect: { type: "collectible", category: "toy", name: "Magic Toy Ball", description: "A glowing ball that never stops bouncing." } },
-  { id: 403, name: "Moonlight Flower", price: 18, currency: "coins", image: "img/assets/moonlight-flower.png", description: "A rare flower that glows in moonlight.", type: "plant", effect: { type: "collectible", category: "plant", name: "Moonlight Flower", description: "A delicate flower that emits soft moonlight." } }
+  { id: 401, name: "Golden Stamp", price: 20, currency: "coins", image: IMG_PATHS.goldenStamp, description: "A beautiful golden stamp for your familiar's collection.", type: "stamp", effect: { type: "collectible", category: "stamp", name: "Golden Stamp", description: "A rare golden stamp." } },
+  { id: 402, name: "Magic Toy Ball", price: 15, currency: "coins", image: IMG_PATHS.magicToyBall, description: "A magical toy that brings joy to familiars.", type: "toy", effect: { type: "collectible", category: "toy", name: "Magic Toy Ball", description: "A glowing ball that never stops bouncing." } },
+  { id: 403, name: "Moonlight Flower", price: 18, currency: "coins", image: IMG_PATHS.moonlightFlower, description: "A rare flower that glows in moonlight.", type: "plant", effect: { type: "collectible", category: "plant", name: "Moonlight Flower", description: "A delicate flower that emits soft moonlight." } }
 ];
 
 // Expose image maps globally
