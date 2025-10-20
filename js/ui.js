@@ -299,6 +299,153 @@ function renderInventory() {
   });
 }
 
+function showBuyQuantityDialog(itemId) {
+  console.log("showBuyQuantityDialog called for", itemId);
+  
+  const item = shopItems.find(i => i.id === itemId);
+  if (!item) {
+    showNotification('Item not found');
+    return;
+  }
+
+  // Create modal overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'buy-quantity-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
+
+  // Create modal content
+  const dialog = document.createElement('div');
+  dialog.style.cssText = `
+    background: rgba(42, 14, 58, 0.95);
+    border: 2px solid #ffd700;
+    padding: 20px;
+    max-width: 400px;
+    color: #fff;
+    text-align: center;
+  `;
+
+  const maxAffordable = Math.floor((gameState[item.currency] || 0) / item.price);
+  const maxQuantity = Math.min(maxAffordable, 99); // Cap at 99 for UI reasons
+
+  dialog.innerHTML = `
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+      ${item.image ? `<img src="${item.image}" style="width: 64px; height: 64px; margin-right: 15px; border-radius: 8px;" alt="${item.name}">` : ''}
+      <div>
+        <h3 style="margin: 0 0 10px 0; color: #ffd700;">${item.name}</h3>
+        <p style="margin: 0; color: #c8bda1;">${item.description || ''}</p>
+      </div>
+    </div>
+    
+    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 15px 0;">
+      <p style="margin: 5px 0; font-size: 16px;"><strong>Price:</strong> ${item.price} ${item.currency === 'coins' ? '🪙 Coins' : '✨ Dust'} each</p>
+      <p style="margin: 5px 0; color: #90EE90;"><strong>You can afford:</strong> ${maxQuantity} ${maxQuantity === 1 ? 'item' : 'items'}</p>
+      <p style="margin: 5px 0; color: #FFD700;"><strong>Your ${item.currency}:</strong> ${gameState[item.currency] || 0}</p>
+    </div>
+    
+    <div style="margin: 20px 0;">
+      <label for="quantity-input" style="display: block; margin-bottom: 10px; font-weight: bold;">Quantity to buy:</label>
+      <input type="number" id="quantity-input" min="1" max="${maxQuantity}" value="1" style="
+        width: 100px;
+        padding: 8px;
+        background: #2a0e3a;
+        color: #fff;
+        border: 2px solid #ffd700;
+        border-radius: 6px;
+        font-size: 16px;
+        text-align: center;
+      ">
+      <div id="total-cost" style="margin-top: 10px; font-size: 18px; color: #ffd700; font-weight: bold;">
+        Total Cost: ${item.price} ${item.currency === 'coins' ? '🪙' : '✨'}
+      </div>
+    </div>
+    
+    <div style="margin: 20px 0;">
+      <button onclick="confirmBuy(${itemId})" style="
+        background: linear-gradient(45deg, #2a0e3a, #4a1a5a);
+        color: #ffd700;
+        border: 2px solid #ffd700;
+        padding: 12px 24px;
+        margin: 0 8px;
+        cursor: pointer;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      " onmouseover="this.style.background='linear-gradient(45deg, #4a1a5a, #6a2a7a)'" onmouseout="this.style.background='linear-gradient(45deg, #2a0e3a, #4a1a5a)'">Buy Now</button>
+      <button onclick="closeBuyQuantityDialog()" style="
+        background: #2a0e3a;
+        color: #ffd700;
+        border: 2px solid #ffd700;
+        padding: 12px 24px;
+        margin: 0 8px;
+        cursor: pointer;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      " onmouseover="this.style.background='#4a1a5a'" onmouseout="this.style.background='#2a0e3a'">Cancel</button>
+    </div>
+  `;
+
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  // Focus on quantity input and add real-time cost calculation
+  setTimeout(() => {
+    const input = document.getElementById('quantity-input');
+    const totalCostEl = document.getElementById('total-cost');
+    
+    if (input) {
+      input.focus();
+      
+      // Add real-time cost calculation
+      input.addEventListener('input', () => {
+        const quantity = parseInt(input.value) || 1;
+        const totalCost = item.price * quantity;
+        const currencySymbol = item.currency === 'coins' ? '🪙' : '✨';
+        
+        if (totalCostEl) {
+          totalCostEl.innerHTML = `Total Cost: ${totalCost} ${currencySymbol}`;
+          
+          // Change color based on affordability
+          if (totalCost > (gameState[item.currency] || 0)) {
+            totalCostEl.style.color = '#ff6b6b';
+          } else {
+            totalCostEl.style.color = '#ffd700';
+          }
+        }
+      });
+    }
+  }, 100);
+}
+
+function closeBuyQuantityDialog() {
+  const overlay = document.getElementById('buy-quantity-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function confirmBuy(itemId) {
+  const quantityInput = document.getElementById('quantity-input');
+  const quantity = parseInt(quantityInput.value) || 1;
+  
+  console.log("buyItem called", itemId, quantity);
+  buyItem(itemId, quantity);
+  closeBuyQuantityDialog();
+}
+
 function renderShop() {
   const container = document.getElementById('shopContainer');
   if (!container) return;
@@ -342,7 +489,7 @@ function renderShop() {
     btn.className = 'btn';
     btn.textContent = 'Buy';
     btn.disabled = !canAfford;
-    btn.onclick = () => buyItem(item.id);
+    btn.onclick = () => showBuyQuantityDialog(item.id);
     div.appendChild(btn);
     
     container.appendChild(div);

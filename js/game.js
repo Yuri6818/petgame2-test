@@ -61,7 +61,9 @@ function claimDaily() {
   saveGame();
 }
 
-function buyItem(itemId) {
+function buyItem(itemId, quantity = 1) {
+  console.log("buyItem called", itemId, quantity);
+  
   try {
     const item = shopItems.find(i => i.id === itemId);
     if (!item) {
@@ -69,51 +71,54 @@ function buyItem(itemId) {
       return;
     }
     
-    const cost = item.price;
+    const cost = item.price * quantity;
     const currency = item.currency;
 
     if (gameState[currency] < cost) {
-      showNotification(`Not enough ${currency}!`);
+      showNotification(`Not enough ${currency}! Need ${cost}, have ${gameState[currency]}`);
       return;
     }
 
-    const confirmation = confirm(`Are you sure you want to buy ${item.name} for ${cost} ${currency}?`);
+    // Remove confirmation dialog since we have quantity dialog now
+    gameState[currency] -= cost;
 
-    if (confirmation) {
-      gameState[currency] -= cost;
-
-      if (item.name === 'Mystery Box') {
+    if (item.name === 'Mystery Box') {
+      // For mystery boxes, buy the quantity specified
+      for (let i = 0; i < quantity; i++) {
         buyMysteryBox();
-      } else if (item.type === 'familiar') {
+      }
+    } else if (item.type === 'familiar') {
+      // For familiars, create the quantity specified
+      for (let i = 0; i < quantity; i++) {
         const newFamiliar = createFamiliarFromItem(item, Date.now() + Math.floor(Math.random() * 1000));
         gameState.familiars.push(newFamiliar);
-        renderFamiliars();
-        showNotification(`You bought a new familiar: ${item.name}!`);
-        celebrate();
-      } else {
-        // Add to inventory
-        const existingItem = gameState.inventory.find(i => i.name === item.name);
-        if (existingItem) {
-          existingItem.quantity = (existingItem.quantity || 0) + 1;
-        } else {
-          gameState.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            name: item.name,
-            image: item.image,
-            quantity: 1,
-            type: item.type || 'consumable',
-            description: item.description || '',
-            effect: item.effect || null
-          });
-        }
-        renderInventory();
-        showNotification(`Purchased ${item.name}!`);
       }
-
-      spawnOrb(currency === 'coins' ? coinCountEl : dustCountEl);
-      updateUI();
-      saveGame();
+      renderFamiliars();
+      showNotification(`You bought ${quantity} ${quantity === 1 ? 'familiar' : 'familiars'}: ${item.name}!`);
+      celebrate();
+    } else {
+      // Add to inventory
+      const existingItem = gameState.inventory.find(i => i.name === item.name);
+      if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 0) + quantity;
+      } else {
+        gameState.inventory.push({
+          id: Date.now() + Math.floor(Math.random() * 1000),
+          name: item.name,
+          image: item.image,
+          quantity: quantity,
+          type: item.type || 'consumable',
+          description: item.description || '',
+          effect: item.effect || null
+        });
+      }
+      renderInventory();
+      showNotification(`Purchased ${quantity} ${quantity === 1 ? 'item' : 'items'}: ${item.name}!`);
     }
+
+    spawnOrb(currency === 'coins' ? coinCountEl : dustCountEl);
+    updateUI();
+    saveGame();
   } catch (error) {
     console.error('Error in buyItem:', error);
     showNotification('An error occurred while purchasing the item.');
