@@ -590,7 +590,7 @@ function useItem(itemId, targetFamiliarId) {
   const inBattle = window.battleState && battleState.playerFamiliar;
   
   // If we're not in battle and no target is specified, show familiar selection for certain items
-  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible')) {
+  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible' || item.effect.stat === 'xpGain')) {
     showFamiliarSelectionDialog(item, (selectedFamiliarId) => {
       useItem(itemId, selectedFamiliarId);
     });
@@ -627,32 +627,37 @@ function useItem(itemId, targetFamiliarId) {
         break;
 
       case 'buff':
-        // Buffs can only be used in battle
-        if (!inBattle) {
+        if (item.effect.stat === 'xpGain') {
+          gameState.player.buffs = gameState.player.buffs || {};
+          gameState.player.buffs.xpBoost = {
+            amount: item.effect.amount,
+            duration: item.effect.duration
+          };
+          showNotification(`Experience Boost activated! The next battle will yield double XP.`);
+          itemUsed = true;
+        } else if (!inBattle) {
           showNotification('This item can only be used in battle!');
           return;
+        } else {
+          if (!targetFamiliar.buffs) targetFamiliar.buffs = {};
+          if (!targetFamiliar.originalStats) targetFamiliar.originalStats = {};
+
+          const buffStat = item.effect.stat;
+          const buffAmount = item.effect.amount;
+
+          if (!(buffStat in targetFamiliar.originalStats)) {
+            targetFamiliar.originalStats[buffStat] = targetFamiliar[buffStat] || 0;
+          }
+
+          targetFamiliar[buffStat] = Number(targetFamiliar.originalStats[buffStat]) + buffAmount;
+          targetFamiliar.buffs[buffStat] = {
+            amount: buffAmount,
+            turnsLeft: item.effect.duration || 1
+          };
+
+          showNotification(`${targetFamiliar.name}'s ${buffStat} increased by ${buffAmount}!`);
+          itemUsed = true;
         }
-
-        if (!targetFamiliar.buffs) targetFamiliar.buffs = {};
-        if (!targetFamiliar.originalStats) targetFamiliar.originalStats = {};
-
-        const buffStat = item.effect.stat;
-        const buffAmount = item.effect.amount;
-
-        // Store original stat if not already stored
-        if (!(buffStat in targetFamiliar.originalStats)) {
-          targetFamiliar.originalStats[buffStat] = targetFamiliar[buffStat] || 0;
-        }
-
-        // Apply or refresh the buff
-        targetFamiliar[buffStat] = Number(targetFamiliar.originalStats[buffStat]) + buffAmount;
-        targetFamiliar.buffs[buffStat] = {
-          amount: buffAmount,
-          turnsLeft: item.effect.duration || 1
-        };
-
-        showNotification(`${targetFamiliar.name}'s ${buffStat} increased by ${buffAmount}!`);
-        itemUsed = true;
         break;
 
       case 'xp':

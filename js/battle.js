@@ -394,8 +394,20 @@ function endBattle(result) {
     const opponentTotal = (battleState.opponentFamiliar.attack || 0) + 
                          (battleState.opponentFamiliar.defense || 0) + 
                          (battleState.opponentFamiliar.speed || 0);
-    const xpGained = Math.floor((battleState.opponentFamiliar.level || 1) * 10 + opponentTotal * 0.5);
+    let xpGained = Math.floor((battleState.opponentFamiliar.level || 1) * 10 + opponentTotal * 0.5);
     
+    // Check for and apply XP boost
+    if (gameState.player.buffs && gameState.player.buffs.xpBoost && gameState.player.buffs.xpBoost.duration > 0) {
+      const boost = gameState.player.buffs.xpBoost;
+      xpGained *= boost.amount;
+      boost.duration--;
+      logBattle(`Experience Boost active! Gained ${xpGained} XP!`);
+      if (boost.duration <= 0) {
+        delete gameState.player.buffs.xpBoost;
+        logBattle('Experience Boost has worn off.');
+      }
+    }
+
     // Award XP to player
     gainXP(xpGained);
     
