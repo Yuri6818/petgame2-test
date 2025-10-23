@@ -738,6 +738,11 @@ function useItem(itemId, targetFamiliarId) {
             const category = item.effect.category;
             const collectibleName = item.effect.name;
             
+            // Ensure the category collection exists and is an array
+            if (!familiar.collectibles[category] || !Array.isArray(familiar.collectibles[category])) {
+              familiar.collectibles[category] = [];
+            }
+
             // Check if already collected
             const alreadyCollected = familiar.collectibles[category].some(item => item.name === collectibleName);
             if (alreadyCollected) {

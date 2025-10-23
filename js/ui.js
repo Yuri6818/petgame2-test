@@ -146,6 +146,7 @@ function renderFamiliars() {
     const div = document.createElement('div');
     div.className = 'card familiar-card';
     div.dataset.familiarId = fam.id;
+    div.onclick = () => showFamiliarDetail(fam.id);
 
     // Stats layout: left = needs, right = core stats
     const cardImageDiv = document.createElement('div');
@@ -245,6 +246,59 @@ function renderFamiliars() {
 
     container.appendChild(div);
   });
+}
+
+function closeFamiliarDetailModal() {
+  const modal = document.getElementById('familiar-detail-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+function showFamiliarDetail(familiarId) {
+  const familiar = gameState.familiars.find(f => f.id === familiarId);
+  if (!familiar) return;
+
+  const modal = document.getElementById('familiar-detail-modal');
+  const content = document.getElementById('familiar-detail-content');
+  if (!modal || !content) return;
+
+  let libraryHtml = '<h4>Books</h4>';
+  if (familiar.library && familiar.library.length > 0) {
+    libraryHtml += '<ul>';
+    familiar.library.forEach(book => {
+      libraryHtml += `<li><strong>${book.title}</strong>: ${book.description} (Read on: ${book.dateRead})</li>`;
+    });
+    libraryHtml += '</ul>';
+  } else {
+    libraryHtml += '<p>No books read yet.</p>';
+  }
+
+  let collectiblesHtml = '<h4>Collectibles</h4>';
+  if (familiar.collectibles) {
+    for (const category in familiar.collectibles) {
+      collectiblesHtml += `<h5>${category.charAt(0).toUpperCase() + category.slice(1)}</h5>`;
+      if (familiar.collectibles[category].length > 0) {
+        collectiblesHtml += '<ul>';
+        familiar.collectibles[category].forEach(item => {
+          collectiblesHtml += `<li><strong>${item.name}</strong>: ${item.description} (Collected on: ${item.dateCollected})</li>`;
+        });
+        collectiblesHtml += '</ul>';
+      } else {
+        collectiblesHtml += `<p>No ${category} collected yet.</p>`;
+      }
+    }
+  }
+
+  content.innerHTML = `
+    <h2>${familiar.name}</h2>
+    <img src="${getImageSrc(familiar)}" alt="${familiar.name}" style="width: 128px; height: 128px; border-radius: 50%;">
+    <p>Level ${familiar.level} ${familiar.species}</p>
+    ${libraryHtml}
+    ${collectiblesHtml}
+  `;
+
+  modal.style.display = 'flex';
 }
 
 /* ---------- Inventory & Shop ---------- */
