@@ -534,32 +534,47 @@ function showFamiliarSelectionDialog(item, callback) {
     color: #fff;
   `;
 
-  dialog.innerHTML = `
-    <h3>Select a familiar to use ${item.name} on:</h3>
-    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
-      ${gameState.familiars.map(familiar => `
-        <div class="familiar-choice" style="
-          border: 1px solid #ffd700;
-          padding: 10px;
-          cursor: pointer;
-          text-align: center;
-          transition: all 0.3s ease;
-        " onclick="selectFamiliarForItem(${familiar.id}, ${item.id})">
-          <img src="${getImageSrc(familiar)}" style="width: 64px; height: 64px; border-radius: 50%;" alt="${familiar.name}">
-          <h4>${familiar.name}</h4>
-          <p>Level ${familiar.level} ${familiar.species}</p>
-        </div>
-      `).join('')}
-    </div>
-    <button onclick="closeFamiliarSelectionDialog()" style="
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #2a0e3a;
-      color: #ffd700;
-      border: 1px solid #ffd700;
-      cursor: pointer;
-    ">Cancel</button>
-  `;
+  if (gameState.familiars.length === 0) {
+    dialog.innerHTML = `
+      <h3>Select a familiar to use ${item.name} on:</h3>
+      <p>You have no familiars to use this item on.</p>
+      <button onclick="closeFamiliarSelectionDialog()" style="
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #2a0e3a;
+        color: #ffd700;
+        border: 1px solid #ffd700;
+        cursor: pointer;
+      ">Close</button>
+    `;
+  } else {
+    dialog.innerHTML = `
+      <h3>Select a familiar to use ${item.name} on:</h3>
+      <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+        ${gameState.familiars.map(familiar => `
+          <div class="familiar-choice" style="
+            border: 1px solid #ffd700;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+          " onclick="selectFamiliarForItem(${familiar.id}, ${item.id})">
+            <img src="${getImageSrc(familiar)}" style="width: 64px; height: 64px; border-radius: 50%;" alt="${familiar.name}">
+            <h4>${familiar.name}</h4>
+            <p>Level ${familiar.level} ${familiar.species}</p>
+          </div>
+        `).join('')}
+      </div>
+      <button onclick="closeFamiliarSelectionDialog()" style="
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #2a0e3a;
+        color: #ffd700;
+        border: 1px solid #ffd700;
+        cursor: pointer;
+      ">Cancel</button>
+    `;
+  }
 
   overlay.appendChild(dialog);
   document.body.appendChild(overlay);
@@ -593,9 +608,17 @@ function useItem(itemId, targetFamiliarId) {
 
   // Check if we're in battle
   const inBattle = window.battleState && battleState.playerFamiliar;
+
+  // If item requires a familiar, check if the user has any
+  if (item.effect && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible' || item.effect.stat === 'xpGain')) {
+    if (gameState.familiars.length === 0) {
+      showNotification('You have no familiars to use this item on!');
+      return;
+    }
+  }
   
   // If we're not in battle and no target is specified, show familiar selection for certain items
-  if (!inBattle && !targetFamiliarId && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible' || item.effect.stat === 'xpGain')) {
+  if (!inBattle && !targetFamiliarId && item.effect && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible' || item.effect.stat === 'xpGain')) {
     showFamiliarSelectionDialog(item, (selectedFamiliarId) => {
       useItem(itemId, selectedFamiliarId);
     });
@@ -701,7 +724,7 @@ function useItem(itemId, targetFamiliarId) {
             familiar.happiness = Math.min(100, (familiar.happiness || 0) + 10);
             familiar.hunger = Math.max(0, (familiar.hunger || 0) - 5);
             
-            showNotification(`${familiar.name} read "${item.effect.title}" and gained wisdom!`);
+            showNotification(`${familiar.name} read \"${item.effect.title}\" and gained wisdom!`);
             itemUsed = true;
           }
         }
@@ -732,7 +755,7 @@ function useItem(itemId, targetFamiliarId) {
             // Increase happiness
             familiar.happiness = Math.min(100, (familiar.happiness || 0) + 15);
             
-            showNotification(`${familiar.name} collected "${collectibleName}" and is very happy!`);
+            showNotification(`${familiar.name} collected \"${collectibleName}\" and is very happy!`);
             itemUsed = true;
           }
         }

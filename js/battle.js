@@ -126,7 +126,7 @@ function showItemMenu() {
   // Render items with descriptions
   const itemsContainer = itemMenu.querySelector('.battle-items');
   itemsContainer.innerHTML = usableItems.map(item => `
-    <div class="battle-item" onclick="useItem(${item.id})">
+    <div class="battle-item" onclick="useItemInBattle(${item.id})">
       <img src="${item.image || 'img/assets/crate.png'}" alt="${item.name}" style="width: 40px; height: 40px;">
       <div>
         <span>${item.name} (${item.quantity})</span><br>
@@ -153,7 +153,7 @@ function hideItemMenu() {
   battleState.itemMenuOpen = false;
 }
 
-function useItem(itemId) {
+function useItemInBattle(itemId) {
   const item = gameState.inventory.find(i => i.id === itemId);
   if (!item || item.quantity <= 0) return;
 
