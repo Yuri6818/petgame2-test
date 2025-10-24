@@ -146,7 +146,6 @@ function renderFamiliars() {
     const div = document.createElement('div');
     div.className = 'card familiar-card';
     div.dataset.familiarId = fam.id;
-    div.onclick = () => showFamiliarDetail(fam.id);
 
     // Stats layout: left = needs, right = core stats
     const cardImageDiv = document.createElement('div');
@@ -155,6 +154,7 @@ function renderFamiliars() {
     const img = createImageElement(imgSrc, fam.name, 'familiar-thumb', (errorImg) => {
       errorImg.src = placeholder;
     });
+    img.onclick = () => showFamiliarDetail(fam.id);
     
     cardImageDiv.appendChild(img);
     
