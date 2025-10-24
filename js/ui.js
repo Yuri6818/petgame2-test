@@ -543,7 +543,15 @@ function renderShop() {
     btn.className = 'btn';
     btn.textContent = 'Buy';
     btn.disabled = !canAfford;
-    btn.onclick = () => showBuyQuantityDialog(item.id);
+    // For Mystery Box, do a single-click purchase (no quantity dialog) and do not add the box to inventory
+    if (item.name === 'Mystery Box') {
+      btn.onclick = () => {
+        // Quick buy one Mystery Box (will deduct currency and immediately grant the random reward)
+        buyItem(item.id, 1);
+      };
+    } else {
+      btn.onclick = () => showBuyQuantityDialog(item.id);
+    }
     div.appendChild(btn);
     
     container.appendChild(div);
