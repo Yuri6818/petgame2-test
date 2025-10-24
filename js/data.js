@@ -114,9 +114,9 @@ const shopItems = [
   { id: 303, name: "Magic Spellbook", price: 35, currency: "coins", image: IMG_PATHS.magicSpellbook, description: "A book containing magical knowledge.", type: "book", effect: { type: "book", title: "Magic Spellbook", description: "Your familiar discovers magical secrets." } },
   
   // Collectible Items
-  { id: 401, name: "Golden Stamp", price: 20, currency: "coins", image: IMG_PATHS.goldenStamp, description: "A beautiful golden stamp for your familiar's collection.", type: "stamp", effect: { type: "collectible", category: "stamp", name: "Golden Stamp", description: "A rare golden stamp." } },
-  { id: 402, name: "Magic Toy Ball", price: 15, currency: "coins", image: IMG_PATHS.magicToyBall, description: "A magical toy that brings joy to familiars.", type: "toy", effect: { type: "collectible", category: "toy", name: "Magic Toy Ball", description: "A glowing ball that never stops bouncing." } },
-  { id: 403, name: "Moonlight Flower", price: 18, currency: "coins", image: IMG_PATHS.moonlightFlower, description: "A rare flower that glows in moonlight.", type: "plant", effect: { type: "collectible", category: "plant", name: "Moonlight Flower", description: "A delicate flower that emits soft moonlight." } }
+  { id: 401, name: "Golden Stamp", price: 20, currency: "coins", image: IMG_PATHS.goldenStamp, description: "A beautiful golden stamp for your familiar's collection.", type: "collectible", effect: { type: "collectible", category: "stamps", name: "Golden Stamp", description: "A rare golden stamp." } },
+  { id: 402, name: "Magic Toy Ball", price: 15, currency: "coins", image: IMG_PATHS.magicToyBall, description: "A magical toy that brings joy to familiars.", type: "collectible", effect: { type: "collectible", category: "toys", name: "Magic Toy Ball", description: "A glowing ball that never stops bouncing." } },
+  { id: 403, name: "Moonlight Flower", price: 18, currency: "coins", image: IMG_PATHS.moonlightFlower, description: "A rare flower that glows in moonlight.", type: "collectible", effect: { type: "collectible", category: "plants", name: "Moonlight Flower", description: "A delicate flower that emits soft moonlight." } }
 ];
 
 // Expose image maps globally

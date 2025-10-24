@@ -219,7 +219,13 @@ function createFamiliarFromItem(item, newId) {
     hp: Number(item.hp) || 60,
     attack: Number(item.attack) || 10,
     defense: Number(item.defense) || 10,
-    speed: Number(item.speed) || 10
+    speed: Number(item.speed) || 10,
+    library: [],
+    collectibles: {
+      stamps: [],
+      toys: [],
+      plants: []
+    }
   };
 }
 
@@ -508,6 +514,9 @@ function interactFamiliar(familiarId, interactionType) {
 
 function showFamiliarSelectionDialog(item, callback) {
   // Create modal overlay
+  // Remove any existing dialog first
+  closeFamiliarSelectionDialog();
+  
   const overlay = document.createElement('div');
   overlay.style.cssText = `
     position: fixed;
@@ -591,15 +600,24 @@ function closeFamiliarSelectionDialog() {
 }
 
 function selectFamiliarForItem(familiarId, itemId) {
+  console.log('selectFamiliarForItem called with familiarId:', familiarId, 'itemId:', itemId);
   if (window.familiarSelectionCallback) {
+    console.log('Calling familiarSelectionCallback');
     window.familiarSelectionCallback(familiarId);
     closeFamiliarSelectionDialog();
+  } else {
+    console.error('No familiar selection callback found');
   }
 }
 
 function useItem(itemId, targetFamiliarId) {
+  console.log('useItem called with itemId:', itemId, 'targetFamiliarId:', targetFamiliarId);
   const item = gameState.inventory.find(i => i.id === itemId);
-  if (!item) return;
+  if (!item) {
+    console.error('Item not found:', itemId);
+    return;
+  }
+  console.log('Found item:', item);
 
   if (item.type === 'egg') {
     hatchEgg(itemId);
@@ -619,7 +637,9 @@ function useItem(itemId, targetFamiliarId) {
   
   // If we're not in battle and no target is specified, show familiar selection for certain items
   if (!inBattle && !targetFamiliarId && item.effect && (item.effect.type === 'heal' || item.effect.type === 'xp' || item.effect.type === 'book' || item.effect.type === 'collectible' || item.effect.stat === 'xpGain')) {
+    console.log('Showing familiar selection dialog for item:', item.name);
     showFamiliarSelectionDialog(item, (selectedFamiliarId) => {
+      console.log('Familiar selected:', selectedFamiliarId);
       useItem(itemId, selectedFamiliarId);
     });
     return;
