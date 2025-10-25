@@ -47,10 +47,14 @@ body.shop { background-image: url('img/assets/shop.png'); }
 body.activities { background-image: url('img/assets/activities.png'); }
 body.battle { background-image: url('img/assets/battle.png'); }
 body.adopt { 
-  background-image: url('img/assets/adopt.png'); 
-  background-position: center top;
-  background-size: cover;
+  background-image: url('img/assets/adopt.png');
+  background-size: auto 80vh;
+  background-position: center bottom;
+  background-repeat: no-repeat; 
+  background-position: center 30px;
+  background-size: auto 130%;
   background-repeat: no-repeat;
+  background-color: #2a0e3a;
 }
 body.pound { background-image: url('img/assets/pound.png'); }
 

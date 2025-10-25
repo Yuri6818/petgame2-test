@@ -335,10 +335,33 @@ function startActivity(activityName) {
     return;
   }
   const activity = gameState.activities[activityName];
-  if (activity.active) return;
+  
+  // If activity is already active, check if it's stalled
+  if (activity.active) {
+    const now = Date.now();
+    // If there's a stored end time and it's passed, complete the activity
+    if (activity.endTime && now >= activity.endTime) {
+      completeActivity(activityName);
+      // After cleanup, start new activity
+      activity.active = true;
+      activity.progress = 0;
+      activity.startTime = now;
+      activity.endTime = now + (activity.duration || 60000); // Default to 1 minute if no duration specified
+      return;
+    }
+    // If activity is truly in progress, don't start again
+    if (activity.endTime && now < activity.endTime) {
+      return;
+    }
+    // If no end time, it's a stalled activity - clean it up
+    activity.active = false;
+    activity.progress = 0;
+  }
   
   activity.active = true;
   activity.progress = 0;
+  activity.startTime = Date.now();
+  activity.endTime = activity.startTime + (activity.duration || 30000);
   
   const btn = document.getElementById(`${activityName}Btn`);
   const progressBar = document.getElementById(`${activityName}Progress`);
@@ -348,15 +371,28 @@ function startActivity(activityName) {
     btn.textContent = `${activityName.charAt(0).toUpperCase() + activityName.slice(1)}...`;
   }
   
-  const interval = setInterval(() => {
-    activity.progress += 10;
+  // Clear any existing interval
+  if (activity.intervalId) {
+    clearInterval(activity.intervalId);
+  }
+  
+  activity.intervalId = setInterval(() => {
+    const now = Date.now();
+    const timeElapsed = now - activity.startTime;
+    const duration = activity.endTime - activity.startTime;
+    activity.progress = Math.min(100, Math.floor((timeElapsed / duration) * 100));
+    
     if (progressBar) progressBar.style.width = activity.progress + '%';
     
-    if (activity.progress >= 100) {
-      clearInterval(interval);
+    if (now >= activity.endTime) {
+      clearInterval(activity.intervalId);
+      delete activity.intervalId;
       completeActivity(activityName);
     }
-  }, 300);
+    
+    // Save state every second
+    saveGame();
+  }, 100);
 }
 
 function startForaging() { startActivity('foraging'); }
@@ -407,8 +443,19 @@ function startCardGame() {
 
 function completeActivity(activityName) {
   const activity = gameState.activities[activityName];
+  if (!activity) return;
+
+  // Clean up activity state
   activity.active = false;
   activity.progress = 0;
+  delete activity.startTime;
+  delete activity.endTime;
+  
+  // Clear any running interval
+  if (activity.intervalId) {
+    clearInterval(activity.intervalId);
+    delete activity.intervalId;
+  }
 
   const btn = document.getElementById(`${activityName}Btn`);
   const progressBar = document.getElementById(`${activityName}Progress`);

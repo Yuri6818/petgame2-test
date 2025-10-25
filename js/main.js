@@ -49,9 +49,39 @@ function loadGame() {
       // Ensure activities keys exist
       const requiredActivities = ['foraging','mining','fishing','catching','enchanting'];
       if (!savedGameState.activities) savedGameState.activities = {};
+      // Activity durations in milliseconds
+      const activityDurations = {
+        foraging: 30000,  // 30 seconds
+        mining: 45000,    // 45 seconds
+        fishing: 60000,   // 1 minute
+        catching: 30000,  // 30 seconds
+        enchanting: 45000 // 45 seconds
+      };
+
       requiredActivities.forEach(a => {
         if (!Object.prototype.hasOwnProperty.call(savedGameState.activities, a)) {
-          savedGameState.activities[a] = { active: false, progress: 0 };
+          savedGameState.activities[a] = { 
+            active: false, 
+            progress: 0,
+            duration: activityDurations[a] 
+          };
+        } else {
+          // Ensure duration is set for existing activities
+          savedGameState.activities[a].duration = activityDurations[a];
+          // Clean up any stalled activities
+          if (savedGameState.activities[a].active) {
+            const now = Date.now();
+            if (!savedGameState.activities[a].endTime || now >= savedGameState.activities[a].endTime) {
+              savedGameState.activities[a].active = false;
+              savedGameState.activities[a].progress = 0;
+              delete savedGameState.activities[a].startTime;
+              delete savedGameState.activities[a].endTime;
+              if (savedGameState.activities[a].intervalId) {
+                clearInterval(savedGameState.activities[a].intervalId);
+                delete savedGameState.activities[a].intervalId;
+              }
+            }
+          }
         }
       });
 
