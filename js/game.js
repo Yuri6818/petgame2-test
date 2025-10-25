@@ -148,23 +148,58 @@ function buyMysteryBox() {
       celebrate();
     }, 80);
   } else {
-    const existingItem = gameState.inventory.find(i => i.name === randomItem.name);
-    if (existingItem) {
-      existingItem.quantity = (existingItem.quantity || 0) + 1;
+    // Get the active familiar for collectible items
+    const activeFamiliar = getActiveFamiliar();
+    
+    // Handle the item effect immediately
+    if (randomItem.effect) {
+      if (randomItem.effect.type === 'collectible' && activeFamiliar) {
+        // For collectibles, add directly to familiar's collection
+        const category = randomItem.effect.category;
+        if (!activeFamiliar.collectibles[category]) {
+          activeFamiliar.collectibles[category] = [];
+        }
+        if (!activeFamiliar.collectibles[category].some(item => item.name === randomItem.effect.name)) {
+          activeFamiliar.collectibles[category].push({
+            name: randomItem.effect.name,
+            description: randomItem.effect.description,
+            dateCollected: new Date().toLocaleDateString()
+          });
+          activeFamiliar.happiness = Math.min(100, (activeFamiliar.happiness || 0) + 15);
+          showNotification(`${activeFamiliar.name} collected ${randomItem.effect.name}!`);
+        } else {
+          // If already collected, give coins instead
+          const compensation = Math.floor(Math.random() * 30) + 20;
+          gameState.coins += compensation;
+          showNotification(`Already collected! Received ${compensation} coins instead.`);
+        }
+      } else if (randomItem.effect.type === 'heal' && activeFamiliar) {
+        // For healing items, apply immediately
+        const healAmount = randomItem.effect.amount;
+        const maxHp = activeFamiliar.hp;
+        activeFamiliar.currentHp = Math.min(maxHp, (activeFamiliar.currentHp || maxHp) + healAmount);
+        showNotification(`${activeFamiliar.name} recovered ${healAmount} HP!`);
+      } else if (randomItem.effect.type === 'xp' && activeFamiliar) {
+        // For XP items, apply immediately
+        activeFamiliar.xp = (activeFamiliar.xp || 0) + randomItem.effect.amount;
+        showNotification(`${activeFamiliar.name} gained ${randomItem.effect.amount} XP!`);
+        levelUpFamiliar(activeFamiliar);
+      } else {
+        // For other items, give coins
+        const compensation = Math.floor(Math.random() * 50) + 25;
+        gameState.coins += compensation;
+        showNotification(`The item turned into ${compensation} coins!`);
+      }
     } else {
-      gameState.inventory.push({
-        id: randomItem.id || Date.now() + Math.floor(Math.random() * 1000),
-        name: randomItem.name || 'Mysterious Item',
-        image: randomItem.image,
-        quantity: 1,
-        type: randomItem.type || 'consumable',
-        description: randomItem.description || ''
-      });
+      // For items without effects, give coins
+      const compensation = Math.floor(Math.random() * 50) + 25;
+      gameState.coins += compensation;
+      showNotification(`The item turned into ${compensation} coins!`);
     }
-    renderInventory();
+    
+    renderFamiliars();
     saveGame();
     setTimeout(() => {
-      showNotification(`You got a ${randomItem.name} from the Mystery Box!`);
       celebrate();
     }, 80);
   }
@@ -192,10 +227,18 @@ function hatchEgg(itemId) {
   });
 }
 
-// Create familiar with safe defaults
+  // Create familiar with safe defaults
 function createFamiliarFromItem(item, newId) {
   const species = item.species || (item.name || 'familiar').toLowerCase().replace(/\s+/g, '');
   
+  // Ensure collectible categories are properly initialized for new familiars
+  const defaultCollectibles = {
+    stamps: [],
+    toys: [],
+    plants: [],
+    books: []
+  };
+
   // Use familiarImages mapping if available, otherwise use default
   let imagePath = item.image || item.img;
   if (!imagePath && window.familiarImages && window.familiarImages[species]) {
@@ -221,11 +264,7 @@ function createFamiliarFromItem(item, newId) {
     defense: Number(item.defense) || 10,
     speed: Number(item.speed) || 10,
     library: [],
-    collectibles: {
-      stamps: [],
-      toys: [],
-      plants: []
-    }
+    collectibles: defaultCollectibles
   };
 }
 
