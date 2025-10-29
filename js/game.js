@@ -904,14 +904,25 @@ function renameFamiliar(id) {
 
 // Active Pet System - Simple functions
 function setActiveFamiliar(familiarId) {
-  const familiar = gameState.familiars.find(f => f.id === familiarId);
-  if (!familiar) {
+  // Find the familiar (robust to numeric/string id types)
+  const index = (gameState.familiars || []).findIndex(f => Number(f.id) === Number(familiarId));
+  if (index === -1) {
     showNotification('Familiar not found!');
     return false;
   }
-  
-  gameState.activeFamiliarId = familiarId;
-  showNotification(`${familiar.name} is now your active familiar!`);
+
+  // Move the selected familiar to the first slot so it appears at the top
+  if (index > 0) {
+    const [selected] = gameState.familiars.splice(index, 1);
+    gameState.familiars.unshift(selected);
+    // Ensure activeFamiliarId remains consistent (use the selected's id)
+    gameState.activeFamiliarId = Number(selected.id);
+  } else {
+    // Already first element
+    gameState.activeFamiliarId = Number(gameState.familiars[0].id);
+  }
+
+  showNotification(`${gameState.familiars[0].name} is now your active familiar!`);
   updateUI();
   saveGame();
   return true;
