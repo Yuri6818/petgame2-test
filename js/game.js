@@ -705,6 +705,21 @@ function useItem(itemId, targetFamiliarId) {
   }
   console.log('Found item:', item);
 
+  // Defensive: ensure item.effect exists for book-type items
+  if (item.effect && item.effect.type === 'book') {
+    // If no target specified, and only one familiar exists, use it automatically
+    if (!targetFamiliarId && (!window.battleState || !battleState.playerFamiliar)) {
+      if ((gameState.familiars || []).length === 1) {
+        targetFamiliarId = gameState.familiars[0].id;
+        console.log('Auto-selecting the only familiar for book use:', targetFamiliarId);
+      } else if ((gameState.familiars || []).length === 0) {
+        showNotification('You have no familiars to read this book!');
+        return;
+      }
+      // If multiple familiars, fall through - existing code will open selection dialog below
+    }
+  }
+
   if (item.type === 'egg') {
     hatchEgg(itemId);
     return;
