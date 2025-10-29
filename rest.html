@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rest Area - Familiar Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="familiars.html">Familiars</a>
+                <a href="battle.html">Battle</a>
+                <a href="shop.html">Shop</a>
+                <a href="inventory.html">Inventory</a>
+                <a href="pound.html">Pound</a>
+                <a href="adopt.html">Adopt</a>
+                <a href="activities.html">Activities</a>
+                <a href="training.html">Training</a>
+                <a href="rest.html" class="active">Rest</a>
+            </nav>
+            <div class="player-stats">
+                <span id="playerCoins">Coins: 0</span>
+                <span id="playerGems">Gems: 0</span>
+            </div>
+        </header>
+        <main>
+            <h1>Rest Area</h1>
+            <div class="rest-area">
+                <div id="familiarDisplay"></div>
+                <div class="rest-message" id="restMessage">Your familiar needs rest...</div>
+                <div class="rest-stats">
+                    <div>Energy: <span id="energyDisplay">100</span>%</div>
+                    <div>Health: <span id="healthDisplay">100</span>%</div>
+                </div>
+                <button class="rest-btn" id="restButton">Rest Familiar</button>
+            </div>
+        </main>
+    </div>
+    <script src="js/data.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/rest.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

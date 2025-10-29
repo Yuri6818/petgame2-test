@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training & Rest Area</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="training">
+    <div class="container">
+        <header>
+            <h1>Training & Rest Area</h1>
+            <div class="timer" id="serverTime"></div>
+            
+            <div class="nav">
+                <a href="index.html" id="btn-home" class="nav-btn"><img src="img/assets/house.png" class="nav-icon" alt="Home"> Home</a>
+                <a href="familiars.html" id="btn-familiars" class="nav-btn"><img src="img/familiars/familiars.png" class="nav-icon" alt="Familiars"> Familiars</a>
+                <a href="inventory.html" id="btn-inventory" class="nav-btn"><img src="img/assets/crate.png" class="nav-icon" alt="Inventory"> Inventory</a>
+                <a href="shop.html" id="btn-shop" class="nav-btn"><img src="img/assets/shopicon.png" class="nav-icon" alt="Shop"> Shop</a>
+                <a href="activities.html" id="btn-activities" class="nav-btn"><img src="img/assets/target.png" class="nav-icon" alt="Activities"> Activities</a>
+                <a href="training.html" id="btn-training" class="nav-btn active"><img src="img/assets/battle.png" class="nav-icon" alt="Training"> Training</a>
+                <a href="battle.html" id="btn-battle" class="nav-btn"><img src="img/assets/battle.png" class="nav-icon" alt="Battle"> Battle</a>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item"><img src="img/assets/coins.png" class="status-icon" alt="Coins"> Coins: <span id="coinCount">150</span></div>
+                <div class="status-item"><img src="img/assets/dust.png" class="status-icon" alt="Dust"> Dust: <span id="dustCount">25</span></div>
+                <div class="status-item"><img src="img/assets/lvlup.png" class="status-icon" alt="Level"> Level: <span id="playerLevel">1</span></div>
+                <div class="status-item" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+                    <div style="font-weight:bold;color:#ffd700;">⭐ XP: <span id="playerXP">0</span></div>
+                    <div class="progress-bar" style="width:180px;height:12px;border-radius:4px;overflow:hidden;">
+                        <div id="playerXPBar" class="progress-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <button id="mute-btn" class="nav-btn">Mute</button>
+            </div>
+        </header>
+
+        <main>
+            <section id="training-section">
+                <h2>Training Area</h2>
+                <div id="active-familiar-display"></div>
+                <div id="training-container" class="training-grid">
+                    <div class="training-option">
+                        <h3>Attack Training</h3>
+                        <button onclick="startTraining('attack')" class="training-btn">Train Attack (10 coins)</button>
+                        <div class="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="training-option">
+                        <h3>Defense Training</h3>
+                        <button onclick="startTraining('defense')" class="training-btn">Train Defense (10 coins)</button>
+                        <div class="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="training-option">
+                        <h3>Speed Training</h3>
+                        <button onclick="startTraining('speed')" class="training-btn">Train Speed (10 coins)</button>
+                        <div class="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rest-section">
+                <h2>Rest Area</h2>
+                <div id="rest-container">
+                    <button onclick="initializeRestArea()" class="rest-btn">Enter Rest Area</button>
+                </div>
+            </section>
+
+            <section id="daily-charm">
+                <h2>Lucky Charm Daily Spin</h2>
+                <div id="lucky-wheel-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Element -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Background music (loop) -->
+    <audio id="bg-music" src="sounds/music.ogg" loop preload="auto"></audio>
+
+    <!-- Load JavaScript files -->
+    <script src="js/data.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/familiar.js"></script>
+    <script src="js/training.js"></script>
+    <script src="js/rest.js"></script>
+    <script src="js/lucky.js"></script>
+</body>
+</html>

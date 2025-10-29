@@ -420,6 +420,11 @@ function endBattle(result) {
       
       // Try to level up (might level multiple times if enough XP)
       levelUpFamiliar(familiar);
+
+      // Increase bond for winning the battle
+      if (typeof increaseBond === 'function') {
+        increaseBond(familiar, 5);
+      }
       
       // Ensure changes are saved and displayed
       saveGame();
