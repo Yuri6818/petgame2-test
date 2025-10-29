@@ -46,7 +46,7 @@ function spinLuckyCharm() {
         applyReward(reward);
         isSpinning = false;
         gameState.lastSpinDate = today;
-        saveGame();
+        try { _safeSave(); } catch (e) { try { if (typeof saveGame === 'function') saveGame(); } catch(e){} }
     }, 4000);
 }
 
@@ -183,3 +183,29 @@ function createLuckyWheel() {
 // Export functions globally
 window.spinLuckyCharm = spinLuckyCharm;
 window.createLuckyWheel = createLuckyWheel;
+
+// Auto-initialize the wheel when the page loads (append into container if present)
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const container = document.getElementById('lucky-wheel-container') || document.getElementById('lucky-container');
+        if (container && typeof createLuckyWheel === 'function') {
+            const wheel = createLuckyWheel();
+            // clear existing content and append
+            container.innerHTML = '';
+            container.appendChild(wheel);
+        }
+    } catch (e) {
+        console.warn('Lucky wheel init error', e);
+    }
+});
+
+// Safe save helper used after awarding rewards
+function _safeSave() {
+    try {
+        if (typeof saveGame === 'function') return saveGame();
+        if (window.game && typeof window.game.save === 'function') return window.game.save();
+        if (window.gameState) localStorage.setItem('familiarGameSave', JSON.stringify(window.gameState));
+    } catch (e) {
+        console.warn('Could not save game state after lucky spin', e);
+    }
+}

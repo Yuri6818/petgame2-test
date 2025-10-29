@@ -14,13 +14,21 @@ window.addEventListener("DOMContentLoaded", () => {
   const isBattlePage = path.includes("battle.html");
   
   if (isBattlePage) {
+    // Ensure saved game is loaded (defensive - loadGame is defined in main.js)
+    try { if (typeof loadGame === 'function') loadGame(); } catch (e) { /* ignore */ }
+    try { if (typeof updateUI === 'function') updateUI(); } catch (e) { /* ignore */ }
+
     // Check for familiar ID in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const familiarId = urlParams.get('familiar');
-    
-    if (familiarId && gameState.familiars.length > 0) {
+
+    if (familiarId) {
       // Convert to number if it's a string
       const id = parseInt(familiarId);
+      // Defensive: ensure fam list available by loading game if empty
+      if ((!(gameState && gameState.familiars && gameState.familiars.length > 0)) && typeof loadGame === 'function') {
+        try { loadGame(); } catch (e) {}
+      }
       if (!isNaN(id)) {
         startBattle(id);
       }
@@ -39,7 +47,7 @@ function startBattle(familiarId) {
     return;
   }
 
-  const playerFamiliar = gameState.familiars.find(f => f.id === familiarId);
+  const playerFamiliar = (gameState.familiars || []).find(f => Number(f.id) === Number(familiarId));
   if (!playerFamiliar) {
     showNotification('Selected familiar not found for battle.');
     return;
