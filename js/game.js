@@ -706,6 +706,12 @@ function useItem(itemId, targetFamiliarId) {
   console.log('Found item:', item);
 
   // Defensive: ensure item.effect exists for book-type items
+  // If a book item somehow lost its effect metadata, synthesize a minimal one so reading still works
+  if ((!item.effect || item.effect.type === undefined) && item.type === 'book') {
+    console.warn('Book item missing effect metadata; creating default effect from name/description');
+    item.effect = { type: 'book', title: item.name || 'Book', description: item.description || '' };
+  }
+
   if (item.effect && item.effect.type === 'book') {
     // If no target specified, and only one familiar exists, use it automatically
     if (!targetFamiliarId && (!window.battleState || !battleState.playerFamiliar)) {
