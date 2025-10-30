@@ -14,11 +14,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    // Don't warn about unbundled dependencies
-    commonjsOptions: {
-      esmExternals: true,
-    },
-    // Preserve your existing file structure
+    // Preserve your existing file structure and behavior
     rollupOptions: {
       input: {
         main: 'index.html',
@@ -30,8 +26,16 @@ export default defineConfig({
         pound: 'pound.html',
         shop: 'shop.html',
       },
-      // Preserve external scripts
-      external: [/^\/js\/.*/],
     },
+    // Copy files directly without bundling
+    copyPublicDir: true,
+  },
+  
+  // Preserve original file structure
+  publicDir: '.',
+  
+  // Don't process JS files
+  optimizeDeps: {
+    exclude: ['js/*']
   },
 });
