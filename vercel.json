@@ -4,5 +4,11 @@
   "framework": "vite",
   "public": true,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/favicon.ico",
+      "destination": "/img/assets/shopicon.png"
+    }
+  ]
 }
