@@ -27,15 +27,17 @@ export default defineConfig({
         shop: 'shop.html',
       },
     },
-    // Copy files directly without bundling
-    copyPublicDir: true,
+    // Use the dedicated `public` folder for static assets (do NOT use project root)
+    // This prevents Vite from copying repository metadata (like .git) into `dist`.
+    // Keep copyPublicDir default behavior (true) so files placed in `public/` are copied.
   },
-  
-  // Preserve original file structure
-  publicDir: '.',
-  
-  // Don't process JS files
+
+  // Serve and copy files from ./public (create this folder if you need static assets)
+  publicDir: 'public',
+
+  // Don't optimize or exclude core app JS by default. Leave as-is so your scripts run
+  // in the browser the same way they did before.
   optimizeDeps: {
-    exclude: ['js/*']
+    exclude: []
   },
 });

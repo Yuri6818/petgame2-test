@@ -11,7 +11,8 @@ let battleState = {
 // Initialize battle if we're on the battle page and have a familiar ID in the URL
 window.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname.toLowerCase();
-  const isBattlePage = path.includes("battle.html");
+  // Support both legacy filenames (battle.html) and Vercel/clean URLs (/battle)
+  const isBattlePage = /(?:\b|\/)battle(?:\.html)?(?:\b|\/)?$/.test(path) || path.includes('/battle');
   
   if (isBattlePage) {
     // Ensure saved game is loaded (defensive - loadGame is defined in main.js)
@@ -39,7 +40,8 @@ window.addEventListener("DOMContentLoaded", () => {
 function startBattle(familiarId) {
   // Check if we're on the battle page - if not, navigate there first
   const path = window.location.pathname.toLowerCase();
-  const isBattlePage = path.includes("battle.html");
+  // Support both legacy filenames (battle.html) and Vercel/clean URLs (/battle)
+  const isBattlePage = /(?:\b|\/)battle(?:\.html)?(?:\b|\/)?$/.test(path) || path.includes('/battle');
   
   if (!isBattlePage) {
     // Navigate to battle page and pass the familiar ID
