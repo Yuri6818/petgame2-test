@@ -6,8 +6,9 @@ export default defineConfig({
   
   // Configure server options
   server: {
-    port: 3000,
+    port: 3001, // Updated port since 3000 was in use
     open: true, // Open browser on server start
+    strictPort: false, // Allow Vite to use alternative ports
   },
 
   // Configure build options

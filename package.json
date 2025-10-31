@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Yuri6818/petgame2-test#readme",
   "devDependencies": {
+    "sharp": "^0.34.4",
     "vite": "^7.1.12"
   }
 }
