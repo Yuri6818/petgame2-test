@@ -6,9 +6,16 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    {
-      "source": "/favicon.ico",
-      "destination": "/img/assets/shopicon.png"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/img/(.*)", "dest": "/img/$1" },
+    { "src": "/sounds/(.*)", "dest": "/sounds/$1" },
+    { "src": "/(.*)\\.js", "dest": "/js/$1.js" },
+    { "src": "/(.*)\\.css", "dest": "/$1.css" },
+    { "src": "/(.*)\\.html", "dest": "/$1.html" }
   ]
 }
