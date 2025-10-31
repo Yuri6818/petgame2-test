@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run copy-static",
-    "preview": "vite preview",
-    "copy-static": "mkdir -p dist/js dist/img dist/sounds dist/public && cp -r js/* dist/js/ && cp -r img/* dist/img/ && cp -r sounds/* dist/sounds/ && cp -r public/* dist/public/"
+    "start": "vite preview",
+    "serve": "vite preview"
   },
   "repository": {
     "type": "git",

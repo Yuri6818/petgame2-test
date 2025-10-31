@@ -1,6 +1,8 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "public": true
+  "buildCommand": false,
+  "outputDirectory": ".",
+  "framework": null,
+  "rewrites": [
+    { "source": "/favicon.ico", "destination": "/img/assets/shopicon.png" }
+  ]
 }
