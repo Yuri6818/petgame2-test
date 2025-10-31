@@ -4,9 +4,10 @@
   "description": "remember to take the clear button out, thanks.  This might work.",
   "main": "index.js",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build && cp -r js dist/js || true && cp -r img dist/img || true && cp -r sounds dist/sounds || true && cp -r public dist/public || true",
-  "preview": "vite preview"
+    "dev": "vite",
+    "build": "vite build && npm run copy-static",
+    "preview": "vite preview",
+    "copy-static": "mkdir -p dist/js dist/img dist/sounds dist/public && cp -r js/* dist/js/ && cp -r img/* dist/img/ && cp -r sounds/* dist/sounds/ && cp -r public/* dist/public/"
   },
   "repository": {
     "type": "git",
