@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   // Base public path for deployment
-  base: '/',
+  base: './',
   
   // Configure server options
   server: {
