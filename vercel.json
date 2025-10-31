@@ -1,17 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    { "src": "^/favicon.ico", "dest": "/public/favicon.ico" },
-    { "src": "^/js/(.*)", "dest": "/js/$1" },
-    { "src": "^/img/(.*)", "dest": "/img/$1" },
-    { "src": "^/sounds/(.*)", "dest": "/sounds/$1" },
-    { "src": "^/style.css", "dest": "/style.css" },
-    { "src": "^/(.*).html", "dest": "/$1.html" }
-  ]
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "public": true
 }

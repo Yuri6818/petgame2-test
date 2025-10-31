@@ -6,9 +6,8 @@ export default defineConfig({
   
   // Configure server options
   server: {
-    port: 3001, // Updated port since 3000 was in use
+    port: 3000,
     open: true, // Open browser on server start
-    strictPort: false, // Allow Vite to use alternative ports
   },
 
   // Configure build options
@@ -26,19 +25,7 @@ export default defineConfig({
         inventory: 'inventory.html',
         pound: 'pound.html',
         shop: 'shop.html',
-      },
-    },
-    // Use the dedicated `public` folder for static assets (do NOT use project root)
-    // This prevents Vite from copying repository metadata (like .git) into `dist`.
-    // Keep copyPublicDir default behavior (true) so files placed in `public/` are copied.
-  },
-
-  // Serve and copy files from ./public (create this folder if you need static assets)
-  publicDir: 'public',
-
-  // Don't optimize or exclude core app JS by default. Leave as-is so your scripts run
-  // in the browser the same way they did before.
-  optimizeDeps: {
-    exclude: []
-  },
+      }
+    }
+  }
 });
