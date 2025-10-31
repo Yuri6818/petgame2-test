@@ -1,12 +1,12 @@
 {
   "name": "petgame2-test",
   "version": "1.0.0",
-  "description": "remember to take the clear button out, thanks.  This might work.",
-  "main": "index.js",
+  "description": "A pet game with familiars",
+  "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "bash ./scripts/build.sh",
+    "deploy": "vercel deploy --prod"
   },
   "repository": {
     "type": "git",
@@ -15,11 +15,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Yuri6818/petgame2-test/issues"
-  },
-  "homepage": "https://github.com/Yuri6818/petgame2-test#readme",
   "devDependencies": {
     "sharp": "^0.34.4",
     "vite": "^7.1.12"
