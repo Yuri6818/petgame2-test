@@ -18,8 +18,11 @@ function copyRecursive(src, dest) {
 
 const root = process.cwd();
 const targets = ['js', 'img', 'sounds', 'public'];
+const staticFiles = ['style.css', 'favicon.ico'];
 const out = path.join(root, 'dist');
 if (!fs.existsSync(out)) fs.mkdirSync(out, { recursive: true });
+
+// First copy the asset folders
 for (const t of targets) {
   const src = path.join(root, t);
   const dest = path.join(out, t);
@@ -28,5 +31,22 @@ for (const t of targets) {
     console.log(`Copied ${t} -> dist/${t}`);
   } catch (err) {
     console.warn(`Skipping ${t}:`, err.message);
+  }
+}
+
+// Then copy HTML and other static files from root
+const htmlFiles = fs.readdirSync(root).filter(f => f.endsWith('.html'));
+const allStaticFiles = [...htmlFiles, ...staticFiles];
+
+for (const file of allStaticFiles) {
+  const src = path.join(root, file);
+  const dest = path.join(out, file);
+  try {
+    if (fs.existsSync(src)) {
+      fs.copyFileSync(src, dest);
+      console.log(`Copied ${file} -> dist/${file}`);
+    }
+  } catch (err) {
+    console.warn(`Skipping ${file}:`, err.message);
   }
 }
