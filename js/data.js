@@ -35,8 +35,13 @@ const familiarImages = {
   shadowfang: 'img/familiars/shadowfang.png',
   unicorn: 'img/familiars/unicorn.png',
   ursina: 'img/familiars/ursina.png',
+  deer: "img/familiars/deer.png",
+  bear: "img/familiars/bear.png",
+  ellyphant: "img/familiars/ellyphant.png",
+  otter: "img/familiars/otter.png",
+  yenna: "img/familiars/yenna.png",
   default: 'img/familiars/familiars.png'
-   // grumblenook: 'img/familiars/cute-deserrt-thing.jpg',
+  
 };
 
 const enemyImages = {
@@ -47,7 +52,6 @@ const enemyImages = {
   blueslime: 'img/enemies/slimeblue.png',
   rockgolem: 'img/enemies/rockgolem.png',
    orc: 'img/enemies/orc.png',
-  // spider: 'img/enemies/spider.jpg',
   // harpy: 'img/enemies/firedog.jpg',
   // hydra: 'img/enemies/frog-mushroom-head.jpg',
   default: IMG_PATHS.battle
@@ -73,7 +77,11 @@ let gameState = {
   { id: 4, name: "Shadowfang", species: "wolf", color: "black", marking: "none", level: 5, xp: 0, image: "img/familiars/shadowfang.png", hunger: 85, thirst: 75, happiness: 82, hp: 100, attack: 18, defense: 12, speed: 15, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
   { id: 5, name: "Luna", species: "cat", color: "white", marking: "spotted", level: 4, xp: 0, image: "img/familiars/bigcat.png", hunger: 90, thirst: 80, happiness: 88, hp: 80, attack: 14, defense: 10, speed: 20, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
   { id: 6, name: "Fennec", species: "fennec", color: "orange", marking: "none", level: 3, xp: 0, image: "img/familiars/fennec.png", hunger: 92, thirst: 85, happiness: 90, hp: 70, attack: 13, defense: 11, speed: 22, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
-  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 11, speed: 30, library: [], collectibles: { stamps: [], toys: [], plants: [] } }
+  { id: 7, name: "Bubbles", species: "fish", color: "blue", marking: "striped", level: 1, xp: 0, image: "img/familiars/fish.png", hunger: 100, thirst: 100, happiness: 95, hp: 60, attack: 12, defense: 11, speed: 30, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 8, name: "Ellyphant", species: "ellyphant", color: "pink", marking: "polka-dotted", level: 7, xp: 0, image: "img/familiars/ellyphant.png", hunger: 75, thirst: 65, happiness: 83, hp: 130, attack: 20, defense: 18, speed: 8, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 9, name: "Yenna", species: "hyena", color: "golden", marking: "none", level: 4, xp: 0, image: "img/familiars/yena1.png", hunger: 88, thirst: 78, happiness: 87, hp: 85, attack: 20, defense: 30, speed: 20, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 10, name: "Otto", species: "otter", color: "brown", marking: "spotted", level: 2, xp: 0, image: "img/familiars/otter.png", hunger: 95, thirst: 90, happiness: 91, hp: 75, attack: 14, defense: 10, speed: 20, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
+  { id: 11, name: "Deer", species: "deer", color: "brown", marking: "spotted", level: 1, xp: 0, image: "img/familiars/deer.png", hunger: 100, thirst: 100, happiness: 95, hp: 80, attack: 13, defense: 10, speed: 20, library: [], collectibles: { stamps: [], toys: [], plants: [] } }
   ],
   pound: [],
   inventory: [
