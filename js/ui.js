@@ -561,18 +561,44 @@ function renderShop() {
 function renderAdoptPage() {
   const container = document.getElementById('adopt');
   if (!container) return;
-  // Basic form for adoption
+
+  // Filter out the default image from the options
+  const adoptableSpecies = Object.keys(familiarImages).filter(s => s !== 'default');
+
+  let speciesHtml = adoptableSpecies.map(species => `
+    <div class="adopt-card" data-species="${species}">
+      <img src="${familiarImages[species]}" alt="${species}">
+      <p>${species.charAt(0).toUpperCase() + species.slice(1)}</p>
+    </div>
+  `).join('');
+
   container.innerHTML = `
-    <div class="grid">
+    <h2>🐾 Adopt a Familiar</h2>
+    <p>Choose a species and name your new companion!</p>
+    <div class="adopt-grid">${speciesHtml}</div>
+    <div class="adopt-form">
       <input type="text" id="adopt-name" placeholder="Familiar Name" />
-      <select id="adopt-species">
-        <option value="cat">Cat</option>
-        <option value="wolf">Wolf</option>
-        <option value="dragon">Dragon</option>
-      </select>
-      <button class="btn" onclick="adoptFamiliar()">Adopt</button>
+      <input type="hidden" id="adopt-species" />
+      <button class="btn" onclick="adoptFamiliar()" disabled>Adopt</button>
     </div>
   `;
+
+  // Add event listeners to the cards
+  container.querySelectorAll('.adopt-card').forEach(card => {
+    card.addEventListener('click', () => {
+      // Remove selected class from all cards
+      container.querySelectorAll('.adopt-card').forEach(c => c.classList.remove('selected'));
+      
+      // Add selected class to the clicked card
+      card.classList.add('selected');
+      
+      // Set the selected species in the hidden input
+      document.getElementById('adopt-species').value = card.dataset.species;
+
+      // Enable the adopt button
+      document.querySelector('.adopt-form .btn').disabled = false;
+    });
+  });
 }
 
 function renderPoundPage() {

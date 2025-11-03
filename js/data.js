@@ -27,21 +27,18 @@ const IMG_PATHS = {
 
 // Image mappings for familiars and enemies - defined first since they're used in gameState
 const familiarImages = {
-  wolf: 'img/familiars/wolf.jpg',
-  cat: 'img/familiars/cat.png',
+  shadowfangs: 'img/familiars/shadowfang.png',
+  opalfelis: 'img/familiars/bigcat.png',
   dragon: 'img/familiars/dragon.png',
-  fennec: 'img/familiars/fennec.png',
-  fish: 'img/familiars/fish.png',
-  shadowfang: 'img/familiars/shadowfang.png',
-  unicorn: 'img/familiars/unicorn.png',
+  finnakin: 'img/familiars/fennec.png',
+  orbinus: 'img/familiars/fish.png',
+  lucidae: 'img/familiars/unicorn.png',
   ursina: 'img/familiars/ursina.png',
-  deer: "img/familiars/deer.png",
-  bear: "img/familiars/bear.png",
+  velarein: "img/familiars/deer.png",
   ellyphant: "img/familiars/ellyphant.png",
-  otter: "img/familiars/otter.png",
-  yenna: "img/familiars/yenna.png",
+  lunari: "img/familiars/otter.png",
+  hexena: "img/familiars/yena1.png",
   default: 'img/familiars/familiars.png'
-  
 };
 
 const enemyImages = {

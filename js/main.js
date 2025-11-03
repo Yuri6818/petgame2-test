@@ -51,11 +51,11 @@ function loadGame() {
       if (!savedGameState.activities) savedGameState.activities = {};
       // Activity durations in milliseconds
       const activityDurations = {
-        foraging: 30000,  // 30 seconds
-        mining: 45000,    // 45 seconds
-        fishing: 60000,   // 1 minute
-        catching: 30000,  // 30 seconds
-        enchanting: 45000 // 45 seconds
+        foraging: 3000,  // 30 seconds
+        mining: 4500,    // 45 seconds
+        fishing: 6000,   // 1 minute
+        catching: 3000,  // 30 seconds
+        enchanting: 4500 // 45 seconds
       };
 
       requiredActivities.forEach(a => {
