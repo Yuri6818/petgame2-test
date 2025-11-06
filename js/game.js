@@ -41,6 +41,47 @@ function celebrate() {
   } catch (e) { console.warn('celebrate() error', e); }
 }
 
+// Battle rewards system
+function addBattleRewards(enemyLevel) {
+  const rewards = [];
+  const rarityChances = {
+    common: 0.7,
+    rare: 0.25,
+    epic: 0.05
+  };
+
+  // Generate 1-3 material rewards based on enemy level
+  const numRewards = Math.floor(Math.random() * 3) + 1;
+  
+  for (let i = 0; i < numRewards; i++) {
+    const roll = Math.random();
+    let rarity;
+    
+    if (roll < rarityChances.common) rarity = 'common';
+    else if (roll < rarityChances.common + rarityChances.rare) rarity = 'rare';
+    else rarity = 'epic';
+
+    // Filter materials by rarity and randomly select one
+    const possibleMaterials = Object.values(materials).filter(m => m.rarity === rarity);
+    if (possibleMaterials.length > 0) {
+      const material = possibleMaterials[Math.floor(Math.random() * possibleMaterials.length)];
+      const amount = rarity === 'epic' ? 1 : rarity === 'rare' ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 1;
+      
+      // Initialize material inventory if needed
+      if (!gameState.materials[material.id]) {
+        gameState.materials[material.id] = 0;
+      }
+      
+      // Add material to inventory
+      gameState.materials[material.id] += amount;
+      rewards.push({ materialId: material.id, amount });
+    }
+  }
+
+  saveGame();
+  return rewards;
+}
+
 console.log("game.js loaded");
 
 // Game Functions
