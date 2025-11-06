@@ -66,6 +66,9 @@ let gameState = {
   xp: 0,
   lastDaily: null,
   activeFamiliarId: null, // Track which familiar is currently active
+  materials: {}, // Materials inventory
+  equipment: [], // Crafted equipment
+  consumables: {}, // Crafted consumables
   familiars: [
     // Example familiars (images are placeholders; drop your images into assets/familiars and update paths)
   { id: 1, name: "Unicorn", species: "unicorn", color: "moss-green", marking: "none", level: 2, xp: 0, image: "img/familiars/unicorn.png", hunger: 95, thirst: 90, happiness: 92, hp: 60, attack: 12, defense: 10, speed: 25, library: [], collectibles: { stamps: [], toys: [], plants: [] } },
@@ -96,6 +99,86 @@ let gameState = {
 };
 
 // Shop items: prefer `image` paths over emoji. Drop images into assets/shop
+// Materials and Crafting Data
+const materials = {
+  fireShard: {
+    id: 'fireShard',
+    name: 'Fire Shard',
+    rarity: 'common',
+    description: 'A warm crystal shard with flickering flames inside'
+  },
+  beastFur: {
+    id: 'beastFur',
+    name: 'Beast Fur',
+    rarity: 'common',
+    description: 'Soft and durable fur from wild creatures'
+  },
+  magicEssence: {
+    id: 'magicEssence',
+    name: 'Magic Essence',
+    rarity: 'rare',
+    description: 'Pure magical energy crystallized into a usable form'
+  },
+  dragonScale: {
+    id: 'dragonScale',
+    name: 'Dragon Scale',
+    rarity: 'epic',
+    description: 'An iridescent scale from a mighty dragon'
+  }
+};
+
+const recipes = {
+  firePotion: {
+    id: 'firePotion',
+    name: 'Fire Potion',
+    description: 'Increases your familiar\'s fire attacks',
+    requiredMaterials: {
+      fireShard: 2,
+      magicEssence: 1
+    },
+    result: {
+      type: 'consumable',
+      effect: 'increaseDamage',
+      value: 1.5,
+      duration: 3
+    }
+  },
+  beastArmor: {
+    id: 'beastArmor',
+    name: 'Beast Armor',
+    description: 'Protective armor made from beast fur',
+    requiredMaterials: {
+      beastFur: 3,
+      magicEssence: 1
+    },
+    result: {
+      type: 'equipment',
+      slot: 'armor',
+      defense: 5
+    }
+  },
+  dragonweave: {
+    id: 'dragonweave',
+    name: 'Dragonweave Cloak',
+    description: 'A powerful cloak woven with dragon scales',
+    requiredMaterials: {
+      dragonScale: 1,
+      beastFur: 2,
+      magicEssence: 2
+    },
+    result: {
+      type: 'equipment',
+      slot: 'cloak',
+      defense: 8,
+      magicResist: 5
+    },
+    levelRequired: 5
+  }
+};
+
+window.materials = materials;
+window.recipes = recipes;
+
 const shopItems = [
   // Battle Items
   { id: 201, name: "Health Potion", price: 20, currency: "coins", image: IMG_PATHS.healthPot, description: "Restores 20 HP to your familiar during battle.", type: "consumable", effect: { type: "heal", amount: 20 } },

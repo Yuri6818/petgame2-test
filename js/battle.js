@@ -441,6 +441,13 @@ function endBattle(result) {
       renderFamiliars();
     }
 
+    // Add material drops
+    const battleRewards = addBattleRewards(battleState.opponentFamiliar.level);
+    if (battleRewards && battleRewards.length > 0) {
+      const rewardText = battleRewards.map(r => `${materials[r.materialId].name} x${r.amount}`).join(', ');
+      logBattle(`You found: ${rewardText}!`);
+    }
+
     showNotification(`You and your familiar gained ${xpGained} XP!`);
     celebrate();
   } else if (result === 'lose') {

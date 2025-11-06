@@ -649,6 +649,112 @@ h1, h2, h3 {
   cursor: pointer;
 }
 
+/* Crafting System Styles */
+.crafting-section {
+  margin-bottom: 30px;
+}
+
+.materials-grid, .recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.material-item {
+  background: rgba(42, 14, 58, 0.9);
+  border: 2px solid;
+  padding: 15px;
+  text-align: center;
+}
+
+.material-item h4 {
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.material-item .amount {
+  font-size: 1.2em;
+  color: #fff;
+  margin: 10px 0;
+}
+
+.material-item .rarity {
+  font-style: italic;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.material-item .description {
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+.recipe-item {
+  background: rgba(42, 14, 58, 0.9);
+  border: 2px solid #ffd700;
+  padding: 15px;
+  text-align: center;
+}
+
+.recipe-item.can-craft {
+  border-color: #4caf50;
+}
+
+.recipe-item h4 {
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.recipe-item .description {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.required-materials {
+  margin: 15px 0;
+}
+
+.recipe-material {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  margin: 5px 0;
+  color: #ff6b6b;
+}
+
+.recipe-material.has-enough {
+  color: #4caf50;
+}
+
+.level-req {
+  color: #ffd700;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.craft-btn {
+  background: linear-gradient(to bottom, #4a2e5a, #2a0e3a);
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.craft-btn:hover:not([disabled]) {
+  box-shadow: 0 0 15px #ffd700;
+}
+
+.craft-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+}
+
 /* Adopt Page Grid */
 .adopt-grid {
   display: grid;
