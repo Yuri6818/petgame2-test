@@ -137,6 +137,8 @@ h1, h2, h3 {
 
 .settings-item input[type="range"] {
   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   width: 100px;
   height: 5px;
   background: #2a0e3a;
@@ -227,6 +229,27 @@ h1, h2, h3 {
 .card:hover {
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Materials display styles */
+.materials-grid span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  cursor: help;
+}
+
+.materials-grid span:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.materials-grid span span {
+  margin-left: 4px;
+  padding: 0;
+  background: none;
 }
 
 .card-image {
@@ -362,12 +385,12 @@ h1, h2, h3 {
 @keyframes confetti-fall { to { transform: translateY(120vh); opacity: 0; } }
 
 /* Hatching overlay simplified */
-#hatching-overlay.hidden { display: none; }
+/* #hatching-overlay.hidden { display: none; }
 #hatching-overlay { position: fixed; left: 0; top: 0; width: 100%; height: 100%; display:flex; align-items:center; justify-content:center; z-index:10000; pointer-events:none; }
 .egg-container { position: relative; width: 200px; height: 200px; }
 .egg { width: 120px; height: 160px; background: radial-gradient(#fff,#ccc); border-radius: 50%; margin: 0 auto; }
 .egg.wobble { animation: wobble 600ms ease-in-out infinite; }
-.egg.crack { /* visual crack via pseudo or removed for brevity */ }
+.egg.crack { /* visual crack via pseudo or removed for brevity */  */
 
 /* Battle Item Menu */
 .battle-items {
