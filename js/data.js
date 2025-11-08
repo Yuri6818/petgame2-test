@@ -54,6 +54,14 @@ const enemyImages = {
   default: IMG_PATHS.battle
 };
 
+const materialIcons = {
+  fireShard: '🔥',
+  beastFur: '🦁',
+  magicEssence: '✨',
+  dragonScale: '🐉'
+};
+window.materialIcons = materialIcons;
+
 // Game State
 let gameState = {
   player: {
@@ -97,87 +105,6 @@ let gameState = {
     catching: { active: false, progress: 0 }
   }
 };
-
-// Shop items: prefer `image` paths over emoji. Drop images into assets/shop
-// Materials and Crafting Data
-const materials = {
-  fireShard: {
-    id: 'fireShard',
-    name: 'Fire Shard',
-    rarity: 'common',
-    description: 'A warm crystal shard with flickering flames inside'
-  },
-  beastFur: {
-    id: 'beastFur',
-    name: 'Beast Fur',
-    rarity: 'common',
-    description: 'Soft and durable fur from wild creatures'
-  },
-  magicEssence: {
-    id: 'magicEssence',
-    name: 'Magic Essence',
-    rarity: 'rare',
-    description: 'Pure magical energy crystallized into a usable form'
-  },
-  dragonScale: {
-    id: 'dragonScale',
-    name: 'Dragon Scale',
-    rarity: 'epic',
-    description: 'An iridescent scale from a mighty dragon'
-  }
-};
-
-const recipes = {
-  firePotion: {
-    id: 'firePotion',
-    name: 'Fire Potion',
-    description: 'Increases your familiar\'s fire attacks',
-    requiredMaterials: {
-      fireShard: 2,
-      magicEssence: 1
-    },
-    result: {
-      type: 'consumable',
-      effect: 'increaseDamage',
-      value: 1.5,
-      duration: 3
-    }
-  },
-  beastArmor: {
-    id: 'beastArmor',
-    name: 'Beast Armor',
-    description: 'Protective armor made from beast fur',
-    requiredMaterials: {
-      beastFur: 3,
-      magicEssence: 1
-    },
-    result: {
-      type: 'equipment',
-      slot: 'armor',
-      defense: 5
-    }
-  },
-  dragonweave: {
-    id: 'dragonweave',
-    name: 'Dragonweave Cloak',
-    description: 'A powerful cloak woven with dragon scales',
-    requiredMaterials: {
-      dragonScale: 1,
-      beastFur: 2,
-      magicEssence: 2
-    },
-    result: {
-      type: 'equipment',
-      slot: 'cloak',
-      defense: 8,
-      magicResist: 5
-    },
-    levelRequired: 5
-  }
-};
-
-window.materials = materials;
-window.recipes = recipes;
 
 const shopItems = [
   // Battle Items

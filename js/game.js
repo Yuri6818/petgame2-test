@@ -42,41 +42,54 @@ function celebrate() {
 }
 
 // Battle rewards system
-function addBattleRewards(enemyLevel) {
+const enemyDrops = {
+    'Goblin Scavenger': [
+        { materialId: 'beastFur', min: 1, max: 3, chance: 0.8 },
+        { materialId: 'magicEssence', chance: 0.1, amount: 1 }
+    ],
+    'Slime': [
+        { materialId: 'magicEssence', min: 1, max: 2, chance: 0.5 }
+    ],
+    'Golem': [
+        { materialId: 'fireShard', min: 2, max: 5, chance: 0.7 }
+    ],
+    'Black Slime': [
+        { materialId: 'magicEssence', min: 1, max: 3, chance: 0.6 }
+    ],
+    'Blue Slime': [
+        { materialId: 'magicEssence', min: 2, max: 4, chance: 0.7 }
+    ],
+    'Rock Golem': [
+        { materialId: 'fireShard', min: 3, max: 6, chance: 0.8 }
+    ],
+    'Orc Warlord': [
+        { materialId: 'beastFur', min: 2, max: 4, chance: 0.9 },
+        { materialId: 'dragonScale', chance: 0.2, amount: 1 }
+    ],
+    // Default drops for any enemy not specified
+    'default': [
+        { materialId: 'beastFur', min: 1, max: 2, chance: 0.5 }
+    ]
+};
+
+function addBattleRewards(enemyName) {
   const rewards = [];
-  const rarityChances = {
-    common: 0.7,
-    rare: 0.25,
-    epic: 0.05
-  };
+  const drops = enemyDrops[enemyName] || enemyDrops['default'];
 
-  // Generate 1-3 material rewards based on enemy level
-  const numRewards = Math.floor(Math.random() * 3) + 1;
-  
-  for (let i = 0; i < numRewards; i++) {
-    const roll = Math.random();
-    let rarity;
-    
-    if (roll < rarityChances.common) rarity = 'common';
-    else if (roll < rarityChances.common + rarityChances.rare) rarity = 'rare';
-    else rarity = 'epic';
-
-    // Filter materials by rarity and randomly select one
-    const possibleMaterials = Object.values(materials).filter(m => m.rarity === rarity);
-    if (possibleMaterials.length > 0) {
-      const material = possibleMaterials[Math.floor(Math.random() * possibleMaterials.length)];
-      const amount = rarity === 'epic' ? 1 : rarity === 'rare' ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 1;
-      
-      // Initialize material inventory if needed
-      if (!gameState.materials[material.id]) {
-        gameState.materials[material.id] = 0;
+  drops.forEach(drop => {
+    if (Math.random() < drop.chance) {
+      const amount = drop.amount || (Math.floor(Math.random() * (drop.max - drop.min + 1)) + drop.min);
+      if (amount > 0) {
+        // Initialize material inventory if needed
+        if (!gameState.materials[drop.materialId]) {
+          gameState.materials[drop.materialId] = 0;
+        }
+        // Add material to inventory
+        gameState.materials[drop.materialId] += amount;
+        rewards.push({ materialId: drop.materialId, amount });
       }
-      
-      // Add material to inventory
-      gameState.materials[material.id] += amount;
-      rewards.push({ materialId: material.id, amount });
     }
-  }
+  });
 
   saveGame();
   return rewards;

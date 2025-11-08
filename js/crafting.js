@@ -83,19 +83,22 @@ const recipes = {
     }
 };
 
+window.materials = materials;
+window.recipes = recipes;
+
 // Player's material inventory (will be stored in game save)
 let materialInventory = {};
 
 // Initialize materials inventory
 function initializeMaterials() {
-    if (!game.data.materials) {
-        game.data.materials = {};
+    if (!gameState.materials) {
+        gameState.materials = {};
         Object.keys(materials).forEach(id => {
-            game.data.materials[id] = 0;
+            gameState.materials[id] = 0;
         });
         saveGame();
     }
-    materialInventory = game.data.materials;
+    materialInventory = gameState.materials;
     updateCraftingUI();
 }
 
@@ -105,7 +108,7 @@ function addMaterial(materialId, amount) {
         materialInventory[materialId] = 0;
     }
     materialInventory[materialId] += amount;
-    game.data.materials = materialInventory;
+    gameState.materials = materialInventory;
     saveGame();
     updateCraftingUI();
     showNotification(`Obtained ${amount}x ${materials[materialId].name}!`);
@@ -115,7 +118,7 @@ function addMaterial(materialId, amount) {
 function canCraftRecipe(recipe) {
     return Object.entries(recipe.requiredMaterials).every(([materialId, required]) => {
         return (materialInventory[materialId] || 0) >= required;
-    }) && (!recipe.levelRequired || game.data.playerLevel >= recipe.levelRequired);
+    }) && (!recipe.levelRequired || gameState.level >= recipe.levelRequired);
 }
 
 // Attempt to craft an item
@@ -135,19 +138,19 @@ function craftItem(recipeId) {
 
     // Add crafted item to inventory
     if (recipe.result.type === 'equipment') {
-        if (!game.data.equipment) game.data.equipment = [];
-        game.data.equipment.push({
+        if (!gameState.equipment) gameState.equipment = [];
+        gameState.equipment.push({
             ...recipe.result,
             name: recipe.name,
             id: `${recipe.id}_${Date.now()}`
         });
     } else if (recipe.result.type === 'consumable') {
-        if (!game.data.consumables) game.data.consumables = {};
-        if (!game.data.consumables[recipe.id]) game.data.consumables[recipe.id] = 0;
-        game.data.consumables[recipe.id]++;
+        if (!gameState.consumables) gameState.consumables = {};
+        if (!gameState.consumables[recipe.id]) gameState.consumables[recipe.id] = 0;
+        gameState.consumables[recipe.id]++;
     }
 
-    game.data.materials = materialInventory;
+    gameState.materials = materialInventory;
     saveGame();
     updateCraftingUI();
     playSound('craft');
@@ -271,8 +274,8 @@ document.addEventListener('DOMContentLoaded', initializeMaterials);
 const originalLoadGame = window.loadGame;
 window.loadGame = function() {
     originalLoadGame();
-    if (game.data.materials) {
-        materialInventory = game.data.materials;
+    if (gameState.materials) {
+        materialInventory = gameState.materials;
         updateCraftingUI();
     }
 };

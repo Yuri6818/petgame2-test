@@ -65,6 +65,93 @@ function showNotification(msg, duration = 2000) {
   setTimeout(() => notificationEl.classList.remove('show'), duration);
 }
 
+// Show a modal popup listing material rewards from a battle (rewards: [{materialId, amount}, ...])
+function showRewardsPopup(rewards = []) {
+  try {
+    if (!Array.isArray(rewards) || rewards.length === 0) return;
+    // Remove existing overlay if present
+    const existing = document.getElementById('rewards-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'rewards-overlay';
+    overlay.className = 'modal-overlay';
+
+    const content = document.createElement('div');
+    content.className = 'modal-content';
+    content.innerHTML = `<h2 style="color:#ffd700;margin-bottom:8px;">Battle Rewards</h2>`;
+
+    const list = document.createElement('div');
+    list.className = 'reward-list';
+    list.style.display = 'grid';
+    list.style.gridTemplateColumns = 'repeat(auto-fit, minmax(160px, 1fr))';
+    list.style.gap = '10px';
+
+    // Simple emoji/icon map for materials (fallback to name initials)
+    const materialIcons = window.materialIcons || {
+      fireShard: '🔥',
+      beastFur: '🦁',
+      magicEssence: '✨',
+      dragonScale: '🐉'
+    };
+
+    rewards.forEach(r => {
+      const mat = (window.materials && window.materials[r.materialId]) || { name: r.materialId };
+      const icon = materialIcons[r.materialId] || '🔸';
+      const item = document.createElement('div');
+      item.className = 'reward-item';
+      item.style.cssText = 'background: rgba(42,14,58,0.9); border:1px solid #ffd700; padding:12px; text-align:center;';
+      item.innerHTML = `
+        <div style="font-size:28px">${icon}</div>
+        <div style="color:#ffd700;font-weight:bold;margin-top:6px">${mat.name}</div>
+        <div style="margin-top:6px;color:#fff">x${r.amount}</div>
+      `;
+      list.appendChild(item);
+    });
+
+    content.appendChild(list);
+
+    // Auto-close modal after a short countdown (3-5s). No buttons required.
+    const countdownSeconds = typeof window.REWARD_POPUP_SECONDS === 'number' ? window.REWARD_POPUP_SECONDS : 4;
+    const countdownEl = document.createElement('div');
+    countdownEl.style.cssText = 'text-align:center;margin-top:12px;color:#c8bda1;';
+    countdownEl.textContent = `Closing in ${countdownSeconds}s...`;
+    content.appendChild(countdownEl);
+
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    // Spawn orbs immediately for visual feedback (materials were already added by addBattleRewards)
+    try {
+      rewards.forEach(r => {
+        const matEl = document.getElementById(r.materialId);
+        if (matEl) spawnOrb(matEl, Math.min(6, r.amount));
+      });
+    } catch (e) { /* ignore visual errors */ }
+
+    // allow ESC to close early
+    const escHandler = (e) => { if (e.key === 'Escape') { overlay.remove(); window.removeEventListener('keydown', escHandler); clearInterval(countInterval); } };
+    window.addEventListener('keydown', escHandler);
+
+    // Countdown timer
+    let remaining = countdownSeconds;
+    const countInterval = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(countInterval);
+        try { if (overlay && overlay.remove) overlay.remove(); } catch (e) {}
+        window.removeEventListener('keydown', escHandler);
+        // ensure UI reflects newest material counts
+        try { if (typeof updateUI === 'function') updateUI(); } catch (e) {}
+      } else {
+        countdownEl.textContent = `Closing in ${remaining}s...`;
+      }
+    }, 1000);
+  } catch (e) {
+    console.warn('showRewardsPopup error', e);
+  }
+}
+
 function spawnOrb(targetEl, count = 1) {
   if (!targetEl) return;
   for (let i = 0; i < count; i++) {
