@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Familiar Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .achievement-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .achievement-card.locked {
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+
+        .achievement-card.unlocked {
+            border: 2px solid #ffd700;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .achievement-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .achievement-info h3 {
+            margin: 0;
+            color: #ffd700;
+        }
+
+        .achievement-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .achievement-complete {
+            color: #50fa7b;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        /* Achievement Popup Styles */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+
+        .achievement-popup.show {
+            right: 20px;
+        }
+
+        .achievement-popup .achievement-icon {
+            font-size: 2rem;
+        }
+
+        .achievement-popup .achievement-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .achievement-popup .achievement-title {
+            color: #ffd700;
+            font-size: 0.8rem;
+        }
+
+        .achievement-popup .achievement-name {
+            color: white;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="familiars.html">Familiars</a>
+                <a href="shop.html">Shop</a>
+                <a href="battle.html">Battle</a>
+                <a href="training.html">Training</a>
+                <a href="crafting.html">Crafting</a>
+                <a href="rest.html">Rest</a>
+                <a href="achievements.html" class="active">Achievements</a>
+            </nav>
+            <div class="status-bar">
+                <div class="status-item"><img src="img/assets/coins.png" class="status-icon" alt="Coins"> Coins: <span id="coinCount">150</span></div>
+                <div class="status-item"><img src="img/assets/dust.png" class="status-icon" alt="Dust"> Dust: <span id="dustCount">25</span></div>
+                <div class="status-item"><img src="img/assets/training-page.png" class="status-icon" alt="Level"> Level: <span id="playerLevel">1</span></div>
+                <div class="status-item">⭐ XP: <span id="playerXP">0</span>/100</div>
+                <button id="mute-btn" class="nav-btn" onclick="toggleMute()">Mute</button>
+                <button id="clear-save-btn" class="nav-btn" onclick="clearSave()">Clear Save</button>
+            </div>
+        </header>
+
+        <main>
+            <h1>🏆 Achievements</h1>
+            <div id="achievements-container"></div>
+        </main>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    <audio id="bg-music" src="sounds/music.ogg" loop preload="auto"></audio>
+
+    <script src="js/data.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAchievementsPage();
+        });
+    </script>
+</body>
+</html>
