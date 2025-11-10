@@ -152,6 +152,35 @@ function showRewardsPopup(rewards = []) {
   }
 }
 
+function showCraftedItemPopup(recipe) {
+    const overlay = document.createElement('div');
+    overlay.id = 'crafted-item-overlay';
+    overlay.className = 'modal-overlay';
+
+    const content = document.createElement('div');
+    content.className = 'modal-content';
+    content.innerHTML = `
+        <h2 style="color:#ffd700;margin-bottom:8px;">Item Crafted!</h2>
+        <h3>${recipe.name}</h3>
+        <img src="${recipe.image || 'img/assets/crate.png'}" alt="${recipe.name}" style="width: 128px; height: 128px; margin: 10px auto; display: block; border: 2px solid #ffd700; border-radius: 8px;">
+        <p>${recipe.description}</p>
+        <button id="close-crafted-popup" class="btn">Awesome!</button>
+    `;
+
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    document.getElementById('close-crafted-popup').onclick = () => {
+        overlay.remove();
+    };
+
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    };
+}
+
 function spawnOrb(targetEl, count = 1) {
   if (!targetEl) return;
   for (let i = 0; i < count; i++) {

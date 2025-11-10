@@ -39,6 +39,7 @@ const recipes = {
         id: 'firePotion',
         name: 'Fire Potion',
         description: 'Increases your familiar\'s fire attacks',
+        image: 'img/assets/crate.png',
         requiredMaterials: {
             fireShard: 2,
             magicEssence: 1
@@ -54,6 +55,7 @@ const recipes = {
         id: 'beastArmor',
         name: 'Beast Armor',
         description: 'Protective armor made from beast fur',
+        image: 'img/assets/crate.png',
         requiredMaterials: {
             beastFur: 3,
             magicEssence: 1
@@ -68,6 +70,7 @@ const recipes = {
         id: 'dragonweave',
         name: 'Dragonweave Cloak',
         description: 'A powerful cloak woven with dragon scales',
+        image: 'img/assets/crate.png',
         requiredMaterials: {
             dragonScale: 1,
             beastFur: 2,
@@ -137,24 +140,33 @@ function craftItem(recipeId) {
     });
 
     // Add crafted item to inventory
-    if (recipe.result.type === 'equipment') {
-        if (!gameState.equipment) gameState.equipment = [];
-        gameState.equipment.push({
-            ...recipe.result,
+    if (!gameState.inventory) {
+        gameState.inventory = [];
+    }
+
+    const existingItem = gameState.inventory.find(i => i.name === recipe.name);
+    if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 0) + 1;
+    } else {
+        gameState.inventory.push({
+            id: `${recipe.id}_${Date.now()}`,
             name: recipe.name,
-            id: `${recipe.id}_${Date.now()}`
+            image: recipe.image,
+            quantity: 1,
+            type: recipe.result.type,
+            description: recipe.description,
+            effect: recipe.result
         });
-    } else if (recipe.result.type === 'consumable') {
-        if (!gameState.consumables) gameState.consumables = {};
-        if (!gameState.consumables[recipe.id]) gameState.consumables[recipe.id] = 0;
-        gameState.consumables[recipe.id]++;
     }
 
     gameState.materials = materialInventory;
     saveGame();
     updateCraftingUI();
+    if (typeof renderInventory === 'function') {
+        renderInventory();
+    }
     playSound('craft');
-    showNotification(`Successfully crafted ${recipe.name}!`);
+    showCraftedItemPopup(recipe);
     return true;
 }
 
