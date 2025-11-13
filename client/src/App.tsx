@@ -1,17 +1,17 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Achievements from './pages/Achievements'
-import Shop from './pages/Shop'
-import Familiars from './pages/Familiars'
-import Inventory from './pages/Inventory'
-import Activities from './pages/Activities'
-import Battle from './pages/Battle'
-import Training from './pages/Training'
-import Adopt from './pages/Adopt'
-import Pound from './pages/Pound'
-import Crafting from './pages/Crafting'
-import Rest from './pages/Rest'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Achievements from "./pages/Achievements";
+import Shop from "./pages/Shop";
+import Familiars from "./pages/Familiars";
+import Inventory from "./pages/Inventory";
+import Activities from "./pages/Activities";
+import Battle from "./pages/Battle";
+import Training from "./pages/Training";
+import Adopt from "./pages/Adopt";
+import Pound from "./pages/Pound";
+import Crafting from "./pages/Crafting";
+import Rest from "./pages/Rest";
+import "./App.css";
 
 function App() {
   return (
@@ -31,7 +31,7 @@ function App() {
         <Route path="/rest" element={<Rest />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

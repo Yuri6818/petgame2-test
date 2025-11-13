@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import { useBodyClass } from '../hooks/useBodyClass'
+import { Link } from "react-router-dom";
+import { useBodyClass } from "../hooks/useBodyClass";
 
 export default function Achievements() {
-  useBodyClass()
+  useBodyClass();
 
   return (
     <div className="container">
@@ -10,57 +10,123 @@ export default function Achievements() {
         <h1>🏆 Achievements</h1>
         <div className="nav">
           <Link to="/" className="nav-btn">
-            <img src="/img/assets/house.png" className="nav-icon" alt="Home" /> Home
+            <img src="/img/assets/house.png" className="nav-icon" alt="Home" />{" "}
+            Home
           </Link>
           <Link to="/familiars" className="nav-btn">
-            <img src="/img/familiars/familiars.png" className="nav-icon" alt="Familiars" /> Familiars
+            <img
+              src="/img/familiars/familiars.png"
+              className="nav-icon"
+              alt="Familiars"
+            />{" "}
+            Familiars
           </Link>
           <Link to="/inventory" className="nav-btn">
-            <img src="/img/assets/crate.png" className="nav-icon" alt="Inventory" /> Inventory
+            <img
+              src="/img/assets/crate.png"
+              className="nav-icon"
+              alt="Inventory"
+            />{" "}
+            Inventory
           </Link>
           <Link to="/shop" className="nav-btn">
-            <img src="/img/assets/shopicon.png" className="nav-icon" alt="Shop" /> Shop
+            <img
+              src="/img/assets/shopicon.png"
+              className="nav-icon"
+              alt="Shop"
+            />{" "}
+            Shop
           </Link>
           <Link to="/activities" className="nav-btn">
-            <img src="/img/assets/target.png" className="nav-icon" alt="Activities" /> Activities
+            <img
+              src="/img/assets/target.png"
+              className="nav-icon"
+              alt="Activities"
+            />{" "}
+            Activities
           </Link>
           <Link to="/adopt" className="nav-btn">
-            <img src="/img/assets/adopt-sign1.png" className="nav-icon" alt="Adopt" /> Adopt
+            <img
+              src="/img/assets/adopt-sign1.png"
+              className="nav-icon"
+              alt="Adopt"
+            />{" "}
+            Adopt
           </Link>
           <Link to="/pound" className="nav-btn">
-            <img src="/img/assets/pound-sign.png" className="nav-icon" alt="Pound" /> Pound
+            <img
+              src="/img/assets/pound-sign.png"
+              className="nav-icon"
+              alt="Pound"
+            />{" "}
+            Pound
           </Link>
           <Link to="/battle" className="nav-btn" hidden>
-            <img src="/img/assets/battle.png" className="nav-icon" alt="Battle" /> Battle
+            <img
+              src="/img/assets/battle.png"
+              className="nav-icon"
+              alt="Battle"
+            />{" "}
+            Battle
           </Link>
           <Link to="/training" className="nav-btn">
-            <img src="/img/assets/training-page.png" className="nav-icon" alt="Training" /> Training
+            <img
+              src="/img/assets/training-page.png"
+              className="nav-icon"
+              alt="Training"
+            />{" "}
+            Training
           </Link>
           <Link to="/crafting" className="nav-btn">
-            <img src="/img/assets/crystal.jpg" className="nav-icon" alt="Crafting" /> Crafting
+            <img
+              src="/img/assets/crystal.jpg"
+              className="nav-icon"
+              alt="Crafting"
+            />{" "}
+            Crafting
           </Link>
         </div>
 
         <div className="status-bar">
           <div className="status-item">
-            <img src="/img/assets/coins.png" className="status-icon" alt="Coins" /> Coins:{' '}
-            <span id="coinCount">150</span>
+            <img
+              src="/img/assets/coins.png"
+              className="status-icon"
+              alt="Coins"
+            />{" "}
+            Coins: <span id="coinCount">150</span>
           </div>
           <div className="status-item">
-            <img src="/img/assets/dust.png" className="status-icon" alt="Dust" /> Dust:{' '}
-            <span id="dustCount">25</span>
+            <img
+              src="/img/assets/dust.png"
+              className="status-icon"
+              alt="Dust"
+            />{" "}
+            Dust: <span id="dustCount">25</span>
           </div>
           <div className="status-item">
-            <img src="/img/assets/training-page.png" className="status-icon" alt="Level" /> Level:{' '}
-            <span id="playerLevel">1</span>
+            <img
+              src="/img/assets/training-page.png"
+              className="status-icon"
+              alt="Level"
+            />{" "}
+            Level: <span id="playerLevel">1</span>
           </div>
           <div className="status-item">
             ⭐ XP: <span id="playerXP">0</span>/100
           </div>
-          <button id="mute-btn" className="nav-btn" onClick={() => window.toggleMute?.()}>
+          <button
+            id="mute-btn"
+            className="nav-btn"
+            onClick={() => window.toggleMute?.()}
+          >
             Mute
           </button>
-          <button id="clear-save-btn" className="nav-btn" onClick={() => window.clearSave?.()}>
+          <button
+            id="clear-save-btn"
+            className="nav-btn"
+            onClick={() => window.clearSave?.()}
+          >
             Clear Save
           </button>
         </div>
@@ -71,5 +137,5 @@ export default function Achievements() {
         <div id="achievements-container"></div>
       </main>
     </div>
-  )
+  );
 }
