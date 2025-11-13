@@ -4,9 +4,11 @@
   "description": "remember to take the clear button out, thanks.  This might work.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "build": "npm run build --prefix client && npm run build --prefix server",
-    "start": "node server/dist/index.js"
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "node scripts/copy-static.js",
+    "start": "vite preview",
+    "serve": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -21,10 +23,5 @@
   "homepage": "https://github.com/Yuri6818/petgame2-test#readme",
   "devDependencies": {
     "vite": "^7.1.12"
-  },
-  "dependencies": {
-    "concurrently": "^9.2.1",
-    "cross-env": "^10.1.0",
-    "dotenv": "^17.2.3"
   }
 }
